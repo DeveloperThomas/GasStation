@@ -9,6 +9,7 @@ namespace GasStation.Models
 {
     public class Payment
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int PaymentId { get; set; }
         public Transaction Transaction { get; set; }

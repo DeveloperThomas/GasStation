@@ -9,6 +9,7 @@ namespace GasStation.Models
 {
     public class Discount
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int DiscountId { get; set; }
         public Product Product { get; set; }

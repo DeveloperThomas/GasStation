@@ -9,6 +9,7 @@ namespace GasStation.Models
 {
     public class Fueling
     {
+        [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int FuelingId { get; set; }
         public Distributor Distributor { get; set; }
