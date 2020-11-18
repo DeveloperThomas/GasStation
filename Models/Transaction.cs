@@ -19,8 +19,10 @@ namespace GasStation.Models
         public int LoyaltyCardId { get; set; }
         [Required]
         public DateTime Date { get; set; }
+        [Required]
+        public string PaymentType { get; set; }
+        public bool? PaymentConfirmationRequested { get; set; }
         public ICollection<ProductsList> ProductsLists { get; set; }
-        public Payment Payment { get; set; }
         public Invoice Invoice { get; set; }
     }
 }
