@@ -1,0 +1,25 @@
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using System.Linq;
+using System.Threading.Tasks;
+
+namespace GasStation.Models
+{
+    public class Product
+    {
+        [Key]
+        public int ProductId { get; set; }
+        [Required]
+        public string Name { get; set; }
+        [Required]
+        public float Price { get; set; }
+        public int? LoyaltyPointsPrice { get; set; }
+        [Required]
+        public float Stock { get; set; }
+        public List<Distributor> Distributors { get; set; }
+        public List<Tank> Tanks { get; set; }
+        public List<Discount> Discounts { get; set; }
+        public ICollection<ProductsList> ProductsLists { get; set; }
+    }
+}
