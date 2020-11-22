@@ -1,53 +1,80 @@
 ﻿@model IEnumerable<GasStation.Models.Product>
 
-@{
-    ViewData["Title"] = "Index";
-}
 
-<h1>Index</h1>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
-<table class="table">
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+
+<span><a asp-action="Create" asp-controller="Product" class="btn btn-danger">Dodaj produkt</a></span>
+<br/>
+<br/>
+<br/>
+<table class="display" id="productTable">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+             Nazwa
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Price)
+              Cena
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.LoyaltyPointsPrice)
+               Wartość w punktach
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Stock)
+               Ilość na stanie
             </th>
             <th></th>
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
-        <tr>
-            <td>
-                @Html.DisplayFor(modelItem => item.Name)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Price)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.LoyaltyPointsPrice)
-            </td>
-            <td>
-                @Html.DisplayFor(modelItem => item.Stock)
-            </td>
-            <td>
-                <a asp-action="Edit" asp-route-id="@item.ProductId">Edit</a> |
-                <a asp-action="Details" asp-route-id="@item.ProductId">Details</a> |
-                <a asp-action="Delete" asp-route-id="@item.ProductId">Delete</a>
-            </td>
-        </tr>
-}
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoyaltyPointsPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+                <td>
+                    <span><a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-primary">Edycja</a></span>
+                    <span><a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-danger">Usuń</a></span>
+                </td>
+            </tr>
+        }
     </tbody>
 </table>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#productTable').DataTable({
+            "iDisplayLength": 10,
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 2] }
+
+            ],
+            "language": {
+                "sSearch": "Szukaj",
+                "productTable":"Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+    })
+</script>
