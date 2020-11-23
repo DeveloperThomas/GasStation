@@ -7,23 +7,23 @@
 
 
 <span><a asp-action="Create" asp-controller="Product" class="btn btn-danger">Dodaj produkt</a></span>
-<br/>
-<br/>
-<br/>
+<br />
+<br />
+<br />
 <table class="display" id="productTable">
     <thead>
         <tr>
             <th>
-             Nazwa
+                Nazwa
             </th>
             <th>
-              Cena
+                Cena
             </th>
             <th>
-               Wartość w punktach
+                Wartość w punktach
             </th>
             <th>
-               Ilość na stanie
+                Ilość na stanie
             </th>
             <th></th>
         </tr>
@@ -45,8 +45,10 @@
                     @Html.DisplayFor(modelItem => item.Stock)
                 </td>
                 <td>
-                    <span><a asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-primary">Edycja</a></span>
-                    <span><a asp-action="Delete" asp-route-id="@item.ProductId" class="btn btn-danger">Usuń</a></span>
+                    <a style="background-color:lightblue;" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-default" title="Edycja"><i class="fas fa-pencil-alt"></i></a>
+                    <span><a style="color:white;background-color:red;" onclick="deleteFunction('@item.ProductId')" class="btn btn-default " title="Usuwanie"><i class="fa fa-trash "></i> </a></span>
+
+                 
                 </td>
             </tr>
         }
@@ -65,7 +67,7 @@
             ],
             "language": {
                 "sSearch": "Szukaj",
-                "productTable":"Pokaż",
+                "productTable": "Pokaż",
                 "sSearchPlaceholder": "Wyszukiwarka",
                 "zeroRecords": "Nie znaleziono żadnych danych",
                 "paginate": {
@@ -76,5 +78,43 @@
                 "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
             }
         });
-    })
+    });
+
+    function deleteFunction(clicked_id) {
+        console.log(clicked_id);
+        $("#valueYes").attr("href", "/Product/Delete?Id=" + clicked_id);
+        $("#myModal").modal('show');
+
+
+    }
+
+
 </script>
+<style>
+
+
+    </style>
+
+    <div class="modal fade" id="myModal" >
+        <div class="modal-dialog" >
+            <form method="post" >
+                <div class="modal-content" >
+                    <div class="modal-header" >
+                        <a href="#" class="close" data-dismiss="modal" > &times;</a >
+       
+                        </div >
+                        <div class="modal-body" >
+                        <h4 > Czy na pewno chcesz usunąć produkt?</h4 >
+                    </div >
+                    <div class="modal-footer" >
+                        <a href="#" class="btn btn-default" data-dismiss="modal" > Nie</a >
+
+                        <a class="btn btn-default" id="valueYes" > Tak</a >
+                    </div >
+
+                </div >
+            </form >
+
+        </div >
+
+    </div >

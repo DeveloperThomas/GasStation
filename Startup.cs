@@ -25,6 +25,7 @@ namespace GasStation
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalDbConnection")));
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<ProductService>();
+            services.AddScoped<DiscountService>();
 
         }
 

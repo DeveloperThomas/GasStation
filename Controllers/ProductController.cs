@@ -58,7 +58,9 @@ namespace GasStation.Controllers
         {
             if (ModelState.IsValid)
             {
+               
                 _productService.Create(product);
+                TempData["Info"] = "Produkt został dodany";
                 return RedirectToAction(nameof(Index));
             }
             return View(product);
@@ -67,10 +69,7 @@ namespace GasStation.Controllers
         // GET: Product/Edit/5
         public IActionResult Edit(int id)
         {
-            if (id == null)
-            {
-                return NotFound();
-            }
+
 
             var product = _productService.GetById(id);
             if (product == null)
@@ -93,6 +92,7 @@ namespace GasStation.Controllers
                 try
                 {
                     _productService.Edit(product);
+                    TempData["Info"] = "Dane produktu zostały zaktualizowane";
                 }
                 catch (DbUpdateConcurrencyException)
                 {
@@ -102,6 +102,7 @@ namespace GasStation.Controllers
                     }
                     else
                     {
+                        TempData["Warning"] = "Wystąpił błąd podczas edycji produktu";
                         throw;
                     }
                 }
@@ -110,22 +111,21 @@ namespace GasStation.Controllers
             return View(product);
         }
 
-        // GET: Product/Delete/5
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+
+            try
             {
-                return NotFound();
+                _productService.Delete(id);
+                TempData["Info"] = "Produkt został usunięty";
+            }
+            catch (Exception)
+            {
+                TempData["Warning"] = "Wystapił błąd podczas usuwania produktu.";
+                throw;
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
+            return RedirectToAction("Index", "Product");
         }
 
         // POST: Product/Delete/5
