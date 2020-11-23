@@ -1,6 +1,6 @@
 
 using GasStation.Models.Contexts;
-
+using GasStation.Service;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.EntityFrameworkCore;
@@ -23,7 +23,10 @@ namespace GasStation
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContextPool<AppDbContext>(options => options.UseSqlServer(Configuration.GetConnectionString("LocalDbConnection")));
-            services.AddControllersWithViews();
+            services.AddControllersWithViews().AddRazorRuntimeCompilation();
+            services.AddScoped<ProductService>();
+            services.AddScoped<DiscountService>();
+
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
