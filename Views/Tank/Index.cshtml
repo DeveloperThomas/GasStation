@@ -1,0 +1,77 @@
+﻿@model IEnumerable<GasStation.Models.Tank>
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<br />
+<br />
+<br />
+<table class="display" id="tankTable">
+    <thead>
+        <tr>
+            <th>
+                ID
+            </th>
+            <th>
+                Rodzaj paliwa
+            </th>
+            <th>
+                Pojemność
+            </th>
+            <th>
+                Ilość na stanie
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TankId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Product.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Capacity)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#tankTable').DataTable({
+            "iDisplayLength": 10,
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 2] }
+
+            ],
+            "language": {
+                "sSearch": "Szukaj",
+                "tankTable": "Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+    });
+
+</script>
+<style>
+</style>
