@@ -16,12 +16,10 @@ namespace GasStation.Controllers
     {
         private readonly AppDbContext _context;
         private readonly TankService _tankService;
-        private readonly ProductService _productService;
-        public TankController(AppDbContext context, TankService tankService, ProductService productService)
+        public TankController(AppDbContext context, TankService tankService)
         {
             _context = context;
             _tankService = tankService;
-            _productService = productService;
         }
 
         public IActionResult Index()
@@ -64,8 +62,9 @@ namespace GasStation.Controllers
                     Capacity = tank.Capacity,
                     Stock = tank.Stock,
                     ProductId = tank.ProductId,
-                    Product = _productService.GetById(tank.ProductId)
+                    TankDistributors = new List<TankDistributor>()
                 };
+
                 _tankService.Create(tank);
                 TempData["Info"] = "Zbiornik został dodany";
                 return RedirectToAction(nameof(Index));

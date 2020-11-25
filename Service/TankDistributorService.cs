@@ -25,20 +25,24 @@ namespace GasStation.Service
             return _context.TankDistributors;
         }
 
-        public void Create(TankDistributor tankdistributor)
+        public TankDistributor Create(Tank tank, Distributor distributor)
         {
             try
             {
-                _context.Add(tankdistributor);
+                TankDistributor td = new TankDistributor()
+                {
+                    TankId = tank.TankId,
+                    DistributorId = distributor.DistributorId
+                };
+                _context.Add(td);
                 _context.SaveChanges();
 
+                return td;
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.ToString());
             }
-
         }
         public void Edit(TankDistributor tankdistributor)
         {

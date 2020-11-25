@@ -55,23 +55,15 @@ namespace GasStation.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public IActionResult Create(Distributor distributor)
+        public IActionResult Create(DistributorCreate distributorCreate)
         {
             if (ModelState.IsValid)
             {
-
-                Distributor modelToAdd = new Distributor
-                {
-                    IsLocked = false,
-                    Counter = distributor.Counter,
-                    ProductId = distributor.ProductId,
-                    Product = _productService.GetById(distributor.ProductId)
-                };
-                _distributorService.Create(distributor);
+                _distributorService.Create(distributorCreate);
                 TempData["Info"] = "Dytrybutor został dodany";
                 return RedirectToAction(nameof(Index));
             }
-            return View(distributor);
+            return View(distributorCreate);
         }
 
         // GET: Distributor/Edit/5

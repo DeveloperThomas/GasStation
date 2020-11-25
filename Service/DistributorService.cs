@@ -1,5 +1,6 @@
 ﻿using GasStation.Models;
 using GasStation.Models.Contexts;
+using GasStation.Models.ModelsView;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,10 +11,14 @@ namespace GasStation.Service
     public class DistributorService
     {
         private readonly AppDbContext _context;
+        private readonly TankDistributorService _tankDistributorService;
+        private readonly TankService _tankService;
 
-        public DistributorService(AppDbContext context)
+        public DistributorService(AppDbContext context, TankDistributorService tankDistributorService, TankService tankService)
         {
             _context = context;
+            _tankDistributorService = tankDistributorService;
+            _tankService = tankService;
         }
 
         public Distributor GetById(int id)
@@ -25,13 +30,32 @@ namespace GasStation.Service
             return _context.Distributors;
         }
 
-        public void Create(Distributor distributor)
+        public void Create(DistributorCreate distributorCreate)
         {
             try
             {
-                _context.Add(distributor);
+                Distributor distributorToAdd = new Distributor
+                {
+                    IsLocked = false,
+                    Counter = 0,
+                    ProductId = 1,
+                    TankDistributors = new List<TankDistributor>()
+                };
+
+                _context.Add(distributorToAdd);
                 _context.SaveChanges();
 
+                distributorCreate.Tanks = new List<Tank>();
+                distributorCreate.Tanks.AddRange(distributorCreate.Tanks);
+
+                foreach (Tank tank in distributorCreate.Tanks)
+                {
+                    TankDistributor td = _tankDistributorService.Create(tank, distributorToAdd);
+                    distributorToAdd.TankDistributors.Add(td);
+                    _tankService.GetById(tank.TankId).TankDistributors.Add(td);
+                }
+
+                _context.SaveChanges();
             }
             catch (Exception ex)
             {
