@@ -45,21 +45,19 @@ namespace GasStation.Service
                 _context.Add(distributorToAdd);
                 _context.SaveChanges();
 
-                distributorCreate.Tanks = new List<Tank>();
-                distributorCreate.Tanks.AddRange(distributorCreate.Tanks);
+                if (distributorCreate.TankIds == null) distributorCreate.TankIds = new List<int>();
 
-                foreach (Tank tank in distributorCreate.Tanks)
+                foreach (int tankId in distributorCreate.TankIds)
                 {
-                    TankDistributor td = _tankDistributorService.Create(tank, distributorToAdd);
+                    TankDistributor td = _tankDistributorService.Create(tankId, distributorToAdd.DistributorId);
                     distributorToAdd.TankDistributors.Add(td);
-                    _tankService.GetById(tank.TankId).TankDistributors.Add(td);
+                    _tankService.GetById(tankId).TankDistributors.Add(td);
                 }
 
                 _context.SaveChanges();
             }
             catch (Exception ex)
             {
-
                 throw new Exception(ex.ToString());
             }
 
@@ -70,7 +68,6 @@ namespace GasStation.Service
             {
                 _context.Update(distributor);
                 _context.SaveChanges();
-
             }
             catch (Exception ex)
             {

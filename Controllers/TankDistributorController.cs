@@ -41,7 +41,7 @@ namespace GasStation.Controllers
         {
             if (ModelState.IsValid)
             {
-                _tankDistributorService.Create(tankDistributor.Tank, tankDistributor.Distributor);
+                _tankDistributorService.Create(tankDistributor.TankId, tankDistributor.DistributorId);
                 TempData["Info"] = "Połączenie Zbiornik-Dystrybutor zostało dodane";
                 return RedirectToAction(nameof(Index));
             }

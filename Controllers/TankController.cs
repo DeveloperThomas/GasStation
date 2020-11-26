@@ -16,10 +16,12 @@ namespace GasStation.Controllers
     {
         private readonly AppDbContext _context;
         private readonly TankService _tankService;
-        public TankController(AppDbContext context, TankService tankService)
+        private readonly ProductService _productService;
+        public TankController(AppDbContext context, TankService tankService, ProductService productService)
         {
             _context = context;
             _tankService = tankService;
+            _productService = productService;
         }
 
         public IActionResult Index()
@@ -48,6 +50,7 @@ namespace GasStation.Controllers
         // GET: Tank/Create
         public IActionResult Create()
         {
+            ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
             return View();
         }
 

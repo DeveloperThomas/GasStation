@@ -8,6 +8,6 @@ namespace GasStation.Models.ModelsView
     public class DistributorCreate
     {
         public Distributor Distributor { get; set; }
-        public List<Tank> Tanks { get; set; }
+        public List<int> TankIds { get; set; }
     }
 }

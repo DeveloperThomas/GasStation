@@ -18,11 +18,8 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="Tanks" class="control-label">Wybierz Podpięte Zbiorniki</label>
-                <select asp-for="Tanks" class="form-control" asp-items="ViewBag.TankId">
-                    <option>3</option>
-                    <option>4</option>
-                </select>
+                <label asp-for="TankIds" class="control-label">Wybierz Podpięte Zbiorniki</label>
+                <select multiple asp-for="TankIds" class="form-control" asp-items="ViewBag.TankIds"></select>
             </div>
             <div class="form-group">
                 <input type="submit" value="Dodaj" class="btn btn-primary" />

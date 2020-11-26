@@ -17,11 +17,13 @@ namespace GasStation.Controllers
         private readonly AppDbContext _context;
         private readonly DistributorService _distributorService;
         private readonly ProductService _productService;
-        public DistributorController(AppDbContext context, DistributorService distributorService, ProductService productService)
+        private readonly TankService _tankService;
+        public DistributorController(AppDbContext context, DistributorService distributorService, ProductService productService, TankService tankService)
         {
             _context = context;
             _distributorService = distributorService;
             _productService = productService;
+            _tankService = tankService;
         }
 
         public IActionResult Index()
@@ -50,6 +52,7 @@ namespace GasStation.Controllers
         // GET: Distributor/Create
         public IActionResult Create()
         {
+            ViewData["TankIds"] = new SelectList(_tankService.GetAllTanks(), "TankId", "TankId");
             return View();
         }
 
