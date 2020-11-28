@@ -1,8 +1,12 @@
 
+using GasStation.Models;
 using GasStation.Models.Contexts;
 using GasStation.Service;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Mvc.Authorization;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
@@ -26,7 +30,16 @@ namespace GasStation
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<ProductService>();
             services.AddScoped<DiscountService>();
-
+            services.AddIdentity<ApplicationUser, IdentityRole>(options =>
+            {
+                options.Password.RequireNonAlphanumeric = false;
+                options.Password.RequireLowercase = false;
+            }).AddEntityFrameworkStores<AppDbContext>();
+            services.AddMvc(options =>
+            {
+                var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
+                options.Filters.Add(new AuthorizeFilter(policy));
+            });//.AddXmlDataContractSerializerFormatters();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -47,6 +60,7 @@ namespace GasStation
 
             app.UseRouting();
 
+            app.UseAuthentication();
             app.UseAuthorization();
 
             app.UseEndpoints(endpoints =>
