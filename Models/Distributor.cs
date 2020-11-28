@@ -12,9 +12,6 @@ namespace GasStation.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int DistributorId { get; set; }
-        public Product Product { get; set; }
-        [ForeignKey("Product")]
-        public int ProductId { get; set; }
         [Required]
         public bool IsLocked { get; set; }
         [Required]

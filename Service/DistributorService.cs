@@ -1,6 +1,7 @@
 ﻿using GasStation.Models;
 using GasStation.Models.Contexts;
 using GasStation.Models.ModelsView;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -38,14 +39,13 @@ namespace GasStation.Service
                 {
                     IsLocked = false,
                     Counter = 0,
-                    ProductId = 1,
-                    TankDistributors = new List<TankDistributor>()
+                    //TankDistributors = new List<TankDistributor>()
                 };
 
                 _context.Add(distributorToAdd);
                 _context.SaveChanges();
 
-                if (distributorCreate.TankIds == null) distributorCreate.TankIds = new List<int>();
+                //if (distributorCreate.TankIds == null) distributorCreate.TankIds = new List<int>();
 
                 foreach (int tankId in distributorCreate.TankIds)
                 {
