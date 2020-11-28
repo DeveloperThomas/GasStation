@@ -19,7 +19,7 @@ namespace GasStation.Models
         public int? LoyaltyPointsPrice { get; set; }
         [Required]
         public float Stock { get; set; }
-        public List<Distributor> Distributors { get; set; }
+        public bool Is_Fuel { get; set; }
         public List<Tank> Tanks { get; set; }
         public List<Discount> Discounts { get; set; }
         public ICollection<ProductsList> ProductsLists { get; set; }

@@ -1,5 +1,6 @@
 ﻿using GasStation.Models;
 using GasStation.Models.Contexts;
+using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -22,7 +23,7 @@ namespace GasStation.Service
         }
         public IEnumerable<Tank> GetAllTanks()
         {
-            return _context.Tanks;
+            return _context.Tanks.Include(x=>x.Product);
         }
 
         public void Create(Tank tank)

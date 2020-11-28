@@ -4,14 +4,16 @@ using GasStation.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GasStation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201128170840_newFieldsFuelingProductDistributor")]
+    partial class newFieldsFuelingProductDistributor
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -65,7 +67,12 @@ namespace GasStation.Migrations
                     b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("DistributorId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Distributors");
                 });
@@ -317,6 +324,13 @@ namespace GasStation.Migrations
                         .HasForeignKey("ProductId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
+                });
+
+            modelBuilder.Entity("GasStation.Models.Distributor", b =>
+                {
+                    b.HasOne("GasStation.Models.Product", null)
+                        .WithMany("Distributors")
+                        .HasForeignKey("ProductId");
                 });
 
             modelBuilder.Entity("GasStation.Models.Fueling", b =>

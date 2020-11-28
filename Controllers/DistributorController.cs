@@ -82,8 +82,6 @@ namespace GasStation.Controllers
             Distributor model = new Distributor
             {
                 DistributorId = distributor.DistributorId,
-                Product = distributor.Product,
-                ProductId = distributor.ProductId,
                 IsLocked = distributor.IsLocked,
                 Counter = distributor.Counter,
                 Fuelings = distributor.Fuelings,
