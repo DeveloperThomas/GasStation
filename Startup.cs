@@ -30,6 +30,12 @@ namespace GasStation
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<ProductService>();
             services.AddScoped<DiscountService>();
+            services.AddScoped<DistributorService>();
+            services.AddScoped<TankService>();
+            services.AddScoped<TankDistributorService>();
+            services.AddScoped<TransactionService>();
+            services.AddScoped<AccountService>();
+            services.AddScoped<LoyaltyCardService>();
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
