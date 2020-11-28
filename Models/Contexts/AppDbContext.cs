@@ -30,7 +30,6 @@ namespace GasStation.Models.Contexts
 
         public DbSet<Discount> Discounts { get; set; }
         public DbSet<Distributor> Distributors { get; set; }
-        public DbSet<Employee> Employees { get; set; }
         public DbSet<Fueling> Fuelings { get; set; }
         public DbSet<Invoice> Invoices { get; set; }
         public DbSet<LoyaltyCard> LoyaltyCards { get; set; }

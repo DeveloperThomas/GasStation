@@ -12,9 +12,9 @@ namespace GasStation.Models
         [DatabaseGenerated(DatabaseGeneratedOption.Identity)]
         [Key]
         public int TransactionId { get; set; }
-        public Employee Employee { get; set; }
-        [ForeignKey("Employee")]
-        public int EmployeeId { get; set; }
+        public ApplicationUser ApplicationUser { get; set; }
+        [ForeignKey("ApplicationUser")]
+        public string ApplicationUserId { get; set; }
         public LoyaltyCard LoyaltyCard { get; set; }
         [ForeignKey("LoyaltyCard")]
         public int LoyaltyCardId { get; set; }
