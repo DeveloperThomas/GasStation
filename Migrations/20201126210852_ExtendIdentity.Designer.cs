@@ -4,14 +4,16 @@ using GasStation.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GasStation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201126210852_ExtendIdentity")]
+    partial class ExtendIdentity
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -139,7 +141,12 @@ namespace GasStation.Migrations
                     b.Property<bool>("IsLocked")
                         .HasColumnType("bit");
 
+                    b.Property<int>("ProductId")
+                        .HasColumnType("int");
+
                     b.HasKey("DistributorId");
+
+                    b.HasIndex("ProductId");
 
                     b.ToTable("Distributors");
                 });
@@ -187,20 +194,9 @@ namespace GasStation.Migrations
                     b.Property<int>("DistributorId")
                         .HasColumnType("int");
 
-                    b.Property<float>("Price")
-                        .HasColumnType("real");
-
-                    b.Property<int>("PriceInPoints")
-                        .HasColumnType("int");
-
-                    b.Property<int>("TankId")
-                        .HasColumnType("int");
-
                     b.HasKey("FuelingId");
 
                     b.HasIndex("DistributorId");
-
-                    b.HasIndex("TankId");
 
                     b.ToTable("Fuelings");
                 });
@@ -274,9 +270,6 @@ namespace GasStation.Migrations
                         .ValueGeneratedOnAdd()
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<bool>("Is_Fuel")
-                        .HasColumnType("bit");
 
                     b.Property<int?>("LoyaltyPointsPrice")
                         .HasColumnType("int");
@@ -524,17 +517,20 @@ namespace GasStation.Migrations
                         .IsRequired();
                 });
 
+            modelBuilder.Entity("GasStation.Models.Distributor", b =>
+                {
+                    b.HasOne("GasStation.Models.Product", "Product")
+                        .WithMany("Distributors")
+                        .HasForeignKey("ProductId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
+                });
+
             modelBuilder.Entity("GasStation.Models.Fueling", b =>
                 {
                     b.HasOne("GasStation.Models.Distributor", "Distributor")
                         .WithMany("Fuelings")
                         .HasForeignKey("DistributorId")
-                        .OnDelete(DeleteBehavior.Cascade)
-                        .IsRequired();
-
-                    b.HasOne("GasStation.Models.Tank", "Tank")
-                        .WithMany()
-                        .HasForeignKey("TankId")
                         .OnDelete(DeleteBehavior.Cascade)
                         .IsRequired();
                 });

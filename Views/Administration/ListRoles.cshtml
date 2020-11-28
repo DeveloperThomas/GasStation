@@ -1,0 +1,41 @@
+﻿@model IEnumerable<IdentityRole>
+
+@{
+    ViewBag.Title = "Role";
+}
+
+<h1>Role</h1>
+
+@if (Model.Any())
+{
+    <a class="btn btn-primary" style="width:auto" asp-controller="administration" asp-action="CreateRole">Stwórz rolę</a>
+
+    foreach (var role in Model)
+    {
+        <div class="card mb-3">
+            <div class="card-header">
+                Id: @role.Id
+            </div>
+            <div class="card-body">
+                <h5 class="card-title">@role.Name</h5>
+            </div>
+            <div class="card-footer">
+                <form asp-action="DeleteRole" asp-route-id="@role.Id" method="post">
+                    <a class="btn btn-primary" asp-action="EditRole" asp-controller="Administration" asp-route-id="@role.Id">Edytuj</a>
+                    <button type="submit" class="btn btn-danger" onclick="return confirm('Czy na pewno chcesz usunąć rolę @role.Name?')">Usuń</button>
+                </form>
+            </div>
+        </div>
+    }
+}
+else
+{
+    <div class="card">
+        <div class="card-header">
+            Brak stworzonych ról
+        </div>
+        <div class="card-body">
+            <a class="btn btn-primary" style="width:auto" asp-controller="administration" asp-action="CreateRole">Stwórz rolę</a>
+        </div>
+    </div>
+}
