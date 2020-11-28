@@ -1,0 +1,50 @@
+﻿@model IEnumerable<GasStation.Models.Tank>
+
+
+<span><a asp-action="Index" asp-controller="Distributor" class="btn btn-danger">Powrót do dystrybutorów</a></span>
+<br/>
+<br/>
+<br/>
+<h3>Lista zbiorników do których jest przypisany dystrybutor</h3>
+<div class="container">
+    <div class="table-responsive">
+        <table class="table">
+            <thead>
+                <tr>
+                    <th>
+                        ID
+                    </th>
+                    <th>
+                        Rodzaj paliwa
+                    </th>
+                    <th>
+                        Pojemność
+                    </th>
+                    <th>
+                        Ilość na stanie
+                    </th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                @foreach (var item in Model)
+                {
+                    <tr>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.TankId)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Product.Name)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Capacity)
+                        </td>
+                        <td>
+                            @Html.DisplayFor(modelItem => item.Stock)
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </div>
+</div>

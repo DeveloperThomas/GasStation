@@ -50,7 +50,7 @@ namespace GasStation.Controllers
         // GET: Tank/Create
         public IActionResult Create()
         {
-            ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
+            ViewData["ProductId"] = new SelectList(_productService.GetAllProductsForTank(), "ProductId", "Name");
             return View();
         }
 

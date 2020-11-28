@@ -39,6 +39,9 @@
                     @Html.DisplayFor(modelItem => item.Counter)
                 </td>
                 <td>
+                    <a style="background-color:lightblue;" asp-action="Preview" asp-route-id="@item.DistributorId" class="btn btn-default" title="Podgląd"><i class="fas fa-search"></i></a>
+                </td>
+                <td>
                     <a style="background-color:lightblue;" asp-action="Edit" asp-route-id="@item.DistributorId" class="btn btn-default" title="Edycja"><i class="fas fa-pencil-alt"></i></a>
                     <span><a style="color:white;background-color:red;" onclick="deleteFunction('@item.DistributorId')" class="btn btn-default " title="Usuwanie"><i class="fa fa-trash "></i> </a></span>
 

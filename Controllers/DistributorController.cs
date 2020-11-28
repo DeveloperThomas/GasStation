@@ -140,15 +140,20 @@ namespace GasStation.Controllers
             return RedirectToAction("Index", "Distributor");
         }
 
-        // POST: Distributor/Delete/5
-        [HttpPost, ActionName("Delete")]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> DeleteConfirmed(int id)
+        public IActionResult Preview(int id)
         {
-            var distributor = await _context.Distributors.FindAsync(id);
-            _context.Distributors.Remove(distributor);
-            await _context.SaveChangesAsync();
-            return RedirectToAction(nameof(Index));
+
+            List<Tank> tanks = new List<Tank>();
+            List<TankDistributor> tanksAssignToDistributor = _distributorService.GetTanksFroDistributor(id);
+
+
+            foreach (var item in tanksAssignToDistributor)
+            {
+                Tank model = _tankService.GetById(item.TankId);
+                tanks.Add(model);
+            }
+
+            return View(tanks);
         }
     }
 }

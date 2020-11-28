@@ -1,0 +1,105 @@
+﻿@model GasStation.Models.ReportSale
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<h2 style="text-align:center;">Raport sprzedaży produktów</h2>
+<form asp-action="ReportOfSales" method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DateFrom" class="control-label">Data początkowa</label>
+                <input asp-for="DateFrom" class="form-control" />
+                <span asp-validation-for="DateFrom" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DateTo" class="control-label">Data końcowa</label>
+                <input asp-for="DateTo" class="form-control" />
+                <span asp-validation-for="DateTo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Generuj</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table class="display" id="productTable">
+    <thead>
+        <tr>
+            <th>
+                Nazwa
+            </th>
+            <th>
+                Cena
+            </th>
+            <th>
+                Wartość w punktach
+            </th>
+            <th>
+                Ilość na stanie
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Products)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.LoyaltyPointsPrice)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Stock)
+                </td>
+                <td>
+                    <a style="background-color:lightblue;" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-default" title="Edycja"><i class="fas fa-pencil-alt"></i></a>
+                    <span><a style="color:white;background-color:red;" onclick="deleteFunction('@item.ProductId')" class="btn btn-default " title="Usuwanie"><i class="fa fa-trash "></i> </a></span>
+
+
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#productTable').DataTable({
+            "iDisplayLength": 10,
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 2] }
+
+            ],
+            "language": {
+                "sSearch": "Szukaj",
+                "productTable": "Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+    });
+
+</script>

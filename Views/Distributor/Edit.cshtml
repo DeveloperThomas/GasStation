@@ -7,11 +7,10 @@
 <html>
 <head>
     <meta name="viewport" content="width=device-width" />
-    <title>Edit</title>
+    <title>Edycja dystrybutora</title>
 </head>
 <body>
 
-<h4>Distributor</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -20,23 +19,23 @@
             <input type="hidden" asp-for="DistributorId" />
             <div class="form-group form-check">
                 <label class="form-check-label">
-                    <input class="form-check-input" asp-for="IsLocked" /> @Html.DisplayNameFor(model => model.IsLocked)
+                    <input class="form-check-input" asp-for="IsLocked" /> @Html.DisplayName("Czy zablokowany?")
                 </label>
             </div>
             <div class="form-group">
-                <label asp-for="Counter" class="control-label"></label>
-                <input asp-for="Counter" class="form-control" />
+                <label asp-for="Counter" class="control-label">Licznik</label>
+                <input asp-for="Counter" class="form-control" readonly/>
                 <span asp-validation-for="Counter" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Zapisz" class="btn btn-primary" />
             </div>
         </form>
     </div>
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Powrót do listy dystrybutorów</a>
 </div>
 
 </body>

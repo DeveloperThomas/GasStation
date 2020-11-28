@@ -30,7 +30,11 @@ namespace GasStation.Service
         {
             return _context.Distributors;
         }
-
+        public List<TankDistributor> GetTanksFroDistributor(int id)
+        {
+            return _context.TankDistributors.Where(x => x.DistributorId == id).ToList();
+        }
+        
         public void Create(DistributorCreate distributorCreate)
         {
             try
