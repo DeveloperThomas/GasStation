@@ -4,14 +4,16 @@ using GasStation.Models.Contexts;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace GasStation.Migrations
 {
     [DbContext(typeof(AppDbContext))]
-    partial class AppDbContextModelSnapshot : ModelSnapshot
+    [Migration("20201128220344_DeleteEmployeeModelUpdateApplicationUser")]
+    partial class DeleteEmployeeModelUpdateApplicationUser
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -338,7 +340,7 @@ namespace GasStation.Migrations
                     b.Property<DateTime>("Date")
                         .HasColumnType("datetime2");
 
-                    b.Property<int?>("LoyaltyCardId")
+                    b.Property<int>("LoyaltyCardId")
                         .HasColumnType("int");
 
                     b.Property<bool?>("PaymentConfirmationRequested")
@@ -568,7 +570,9 @@ namespace GasStation.Migrations
 
                     b.HasOne("GasStation.Models.LoyaltyCard", "LoyaltyCard")
                         .WithMany()
-                        .HasForeignKey("LoyaltyCardId");
+                        .HasForeignKey("LoyaltyCardId")
+                        .OnDelete(DeleteBehavior.Cascade)
+                        .IsRequired();
                 });
 
             modelBuilder.Entity("Microsoft.AspNetCore.Identity.IdentityRoleClaim<string>", b =>

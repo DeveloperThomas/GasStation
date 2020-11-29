@@ -32,13 +32,15 @@ namespace GasStation.Controllers
 
         public IActionResult Create()
         {
-            DiscountCreate model = new DiscountCreate();
-            model.TypeOfDiscount = new List<SelectListItem>
+            DiscountCreate model = new DiscountCreate
+            {
+                TypeOfDiscount = new List<SelectListItem>
                     {
                         new SelectListItem { Value = "0", Text = "Wartościowa" },
                         new SelectListItem { Value = "1", Text = "Procentowa" },
-      
-                    };
+
+                    }
+            };
             ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
             return View(model);
         }
@@ -86,8 +88,7 @@ namespace GasStation.Controllers
                 TypeOfDiscount = new List<SelectListItem>
                     {
                         new SelectListItem { Value = "0", Text = "Wartościowa" },
-                        new SelectListItem { Value = "1", Text = "Procentowa" },
-
+                        new SelectListItem { Value = "1", Text = "Procentowa" }
                     }
             };
    
