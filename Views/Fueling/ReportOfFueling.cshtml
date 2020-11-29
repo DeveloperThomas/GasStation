@@ -32,7 +32,7 @@
 </form>
 
 
-<table class="display" id="productTable">
+<table class="display" id="reportFuelingTable">
     <thead>
         <tr>
             <th>
@@ -43,9 +43,6 @@
             </th>
             <th>
                 Data tankowania
-            </th>
-            <th>
-                Ilość na stanie
             </th>
             <th>
                 Ilość(litry)
@@ -89,7 +86,7 @@
 <script>
 
     $(document).ready(function () {
-        $('#productTable').DataTable({
+        $('#reportFuelingTable').DataTable({
             "iDisplayLength": 10,
             "columnDefs": [
                 { "orderable": false, "targets": [0, 2] }

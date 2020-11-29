@@ -1,8 +1,6 @@
 ﻿@model GasStation.Models.ModelsView.DiscountCreate
 
-@{
-    ViewData["Title"] = "Create";
-}
+
 
 <h1>Utwórz nową promocję</h1>
 <hr />
@@ -11,12 +9,12 @@
         <form asp-action="Create">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <div class="form-group">
-                <label asp-for="ProductId" class="control-label"></label>
+                <label asp-for="ProductId" class="control-label">Produkt</label>
                 <select asp-for="ProductId" class ="form-control" asp-items="ViewBag.ProductId"></select>
             </div>
             <div class="form-group">
                 <label asp-for="Name" class="control-label">Nazwa</label>
-                <input asp-for="Name" class="form-control" />
+                <input asp-for="Name" class="form-control" data-val-required="To pole jest wymagane." />
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
