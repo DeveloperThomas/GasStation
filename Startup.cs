@@ -30,6 +30,7 @@ namespace GasStation
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<ProductService>();
             services.AddScoped<DiscountService>();
+            services.AddScoped<LoyaltyCardService>();
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
@@ -39,7 +40,7 @@ namespace GasStation
             {
                 var policy = new AuthorizationPolicyBuilder().RequireAuthenticatedUser().Build();
                 options.Filters.Add(new AuthorizeFilter(policy));
-            });//.AddXmlDataContractSerializerFormatters();
+            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
