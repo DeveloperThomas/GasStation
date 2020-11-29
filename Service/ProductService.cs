@@ -24,7 +24,10 @@ namespace GasStation.Service
         {
             return _context.Products;
         }
-
+        public IEnumerable<Product> GetAllProductsForTank()
+        {
+            return _context.Products.Where(x=>x.Is_Fuel==true);
+        }
         public void Create(Product product)
         {
             try

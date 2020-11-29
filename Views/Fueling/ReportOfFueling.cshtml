@@ -1,0 +1,113 @@
+﻿@model GasStation.Models.FuelingReport
+
+
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
+
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<h2 style="text-align:center;">Raport tankowań na stacji</h2>
+<form asp-action="ReportOfFueling" method="post">
+    <div class="row">
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DateFrom" class="control-label">Data początkowa</label>
+                <input asp-for="DateFrom" class="form-control" />
+                <span asp-validation-for="DateFrom" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4">
+            <div class="form-group">
+                <label asp-for="DateTo" class="control-label">Data końcowa</label>
+                <input asp-for="DateTo" class="form-control" />
+                <span asp-validation-for="DateTo" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-2">
+            <br />
+            <div class="form-group">
+                <button type="submit" class="btn btn-primary">Wyświetl</button>
+            </div>
+        </div>
+    </div>
+</form>
+
+
+<table class="display" id="productTable">
+    <thead>
+        <tr>
+            <th>
+                Dystrybutor
+            </th>
+            <th>
+               Zbiornik
+            </th>
+            <th>
+                Data tankowania
+            </th>
+            <th>
+                Ilość na stanie
+            </th>
+            <th>
+                Ilość(litry)
+            </th>
+            <th>
+                Wartość(zł)
+            </th>
+            <th>
+                Wartość w punktach
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.Fuelings)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.DistributorId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TankId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Price)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.PriceInPoints)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+
+
+<script>
+
+    $(document).ready(function () {
+        $('#productTable').DataTable({
+            "iDisplayLength": 10,
+            "columnDefs": [
+                { "orderable": false, "targets": [0, 2] }
+
+            ],
+            "language": {
+                "sSearch": "Szukaj",
+                "productTable": "Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+    });
+
+</script>
