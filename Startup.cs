@@ -31,8 +31,14 @@ namespace GasStation
             services.AddScoped<ProductService>();
             services.AddScoped<DiscountService>();
             services.AddScoped<FuelingService>();
+            services.AddScoped<DistributorService>();
             services.AddScoped<TankService>();
             services.AddScoped<TankDistributorService>();
+            services.AddScoped<TransactionService>();
+            services.AddScoped<AccountService>();
+            services.AddScoped<LoyaltyCardService>();
+            services.AddScoped<ProductsListService>();
+            services.AddHttpContextAccessor();
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;
