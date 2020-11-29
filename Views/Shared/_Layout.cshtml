@@ -51,7 +51,7 @@
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Discount" class="btn btn-secondary">Lista transakcji</a>
+                            <a asp-action="Index" asp-controller="Discount" class="btn btn-primary">Lista transakcji</a>
                         </li>
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Product" class="btn btn-primary">Produkty</a>
@@ -59,29 +59,31 @@
                         </li>
                         <li class="nav-item">
 
-                            <a asp-action="Index" asp-controller="Discount" class="btn btn-danger">Promocje</a>
+                            <a asp-action="Index" asp-controller="Discount" class="btn btn-primary">Promocje</a>
                         </li>
                         <li class="nav-item">
 
-                            <a asp-action="Index" asp-controller="Tank" class="btn btn-info">Zbiorniki</a>
+                            <a asp-action="Index" asp-controller="Tank" class="btn btn-primary">Zbiorniki</a>
                         </li>
                         <li class="nav-item">
 
-                            <a asp-action="Index" asp-controller="Distributor" class="btn btn-info">Dystrybutory</a>
+                            <a asp-action="Index" asp-controller="Distributor" class="btn btn-primary">Dystrybutory</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="nav-link dropdown-toggle btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Raporty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a asp-action="ReportOfSales" asp-controller="Report" class="btn btn-success">Raport sprzedaży</a>
+                                <a asp-action="ReportOfSales" asp-controller="Report" class="btn">Raport sprzedaży</a>
                                 <a asp-action="ReportOfFueling" asp-controller="Fueling" class="dropdown-item">Tankowania</a>
                             </div>
                         </li>
 
                         <li class="nav-item">
-
-                            <a asp-action="Index" asp-controller="LoyaltyCard" class="btn btn-warning">Karty lojalnościowe</a>
+                            <a asp-action="Index" asp-controller="LoyaltyCard" class="btn btn-primary">Karty lojalnościowe</a>
+                        </li>
+                        <li class="nav-item">
+                            <a asp-action="Index" asp-controller="Transaction" class="btn btn-primary">Transakcje</a>
                         </li>
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
                         {
