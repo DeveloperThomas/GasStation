@@ -1,0 +1,52 @@
+﻿@model IEnumerable<GasStation.Models.Transaction>
+
+@{
+    ViewData["Title"] = "Index";
+}
+
+<h1>Index</h1>
+
+<p>
+    <a asp-action="Create">Create New</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Pracownik
+            </th>
+            <th>
+                Data
+            </th>
+            <th>
+                Rodzaj płatności
+            </th>
+            <th>
+                Potwierdzenie
+            </th>
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+               @(item.ApplicationUser.Name +  " " + item.ApplicationUser.Surname)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Date)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentType)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.PaymentConfirmationRequested)
+            </td>
+            <td>
+                <a asp-action="Edit" asp-route-id="@item.TransactionId">Edit</a> |
+                <a asp-action="Details" asp-route-id="@item.TransactionId">Details</a>
+            </td>
+        </tr>
+}
+    </tbody>
+</table>

@@ -17,7 +17,7 @@ namespace GasStation.Models
         public string ApplicationUserId { get; set; }
         public LoyaltyCard LoyaltyCard { get; set; }
         [ForeignKey("LoyaltyCard")]
-        public int LoyaltyCardId { get; set; }
+        public int? LoyaltyCardId { get; set; }
         [Required]
         public DateTime Date { get; set; }
         [Required]

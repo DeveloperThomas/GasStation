@@ -1,30 +1,33 @@
 ﻿using GasStation.Models;
 using GasStation.Models.Contexts;
 
-using Microsoft.AspNetCore.Identity;
+using Microsoft.AspNetCore.Http;
 
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using System.Security.Claims;
 
 namespace GasStation.Service
 {
     public class AccountService
     {
 
-        private readonly AppDbContext _appDbContext;
-        private readonly UserManager<IdentityUser> _userManager;
-        
-        public AccountService(AppDbContext appDbContext, UserManager<IdentityUser> userManager)
+        private readonly AppDbContext _context;
+        private readonly IHttpContextAccessor _httpContextAccessor;
+
+        public AccountService(AppDbContext context, IHttpContextAccessor httpContextAccessor)
         {
-            _appDbContext = appDbContext;
-            _userManager = userManager;
+            _context = context;
+            _httpContextAccessor = httpContextAccessor;
         }
 
-        public IEnumerable<IdentityUser> GetAllAccounts()
+        public IEnumerable<ApplicationUser> GetAllAccounts()
         {
-            return _userManager.Users.Cast<ApplicationUser>();
+            return _context.Users;
+        }
+
+        public string GetCurrentUserId()
+        {
+            return _httpContextAccessor.HttpContext.User.FindFirstValue(ClaimTypes.NameIdentifier);
         }
     }
 }
