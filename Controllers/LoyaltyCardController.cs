@@ -56,7 +56,7 @@ namespace GasStation.Controllers
         {
             if (ModelState.IsValid)
             {
-
+                loyaltyCard.IssueDate = DateTime.Now;
                 _loyaltyCardService.Create(loyaltyCard);
                 TempData["Info"] = "Karta została dodana";
                 return RedirectToAction(nameof(Index));

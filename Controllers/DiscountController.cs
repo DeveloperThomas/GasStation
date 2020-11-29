@@ -42,6 +42,10 @@ namespace GasStation.Controllers
                     }
             };
             ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
+
+            model.BeginDate = DateTime.Now;
+            model.FinishDate = DateTime.Now;
+
             return View(model);
         }
 
@@ -62,6 +66,7 @@ namespace GasStation.Controllers
                     ProductId=discountAdd.ProductId
                 };
                 _discountService.Create(modelToAdd);
+                TempData["Info"] = "Pomocja została dodana";
                 return RedirectToAction(nameof(Index));
             }
             return View(discountAdd);

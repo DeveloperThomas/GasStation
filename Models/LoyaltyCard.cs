@@ -13,8 +13,6 @@ namespace GasStation.Models
         [Key]
         public int LoyaltyCardId { get; set; }
         [Required]
-        public string Type { get; set; }
-        [Required]
         public int Points { get; set; }
         [Required]
         public DateTime IssueDate { get; set; }
@@ -29,6 +27,8 @@ namespace GasStation.Models
         [Required]
         public int BuildingNumber { get; set; }
         [Required]
-        public int PostalCode { get; set; }
+        [StringLength(6)]
+        [RegularExpression(@"[0-9]{2}[-][0-9]{3}", ErrorMessage = "Nieprawidłowy format kodu pocztowego")]
+        public string PostalCode { get; set; }
     }
 }

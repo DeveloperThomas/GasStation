@@ -144,12 +144,14 @@ namespace GasStation.Controllers
         {
 
             List<Tank> tanks = new List<Tank>();
-            List<TankDistributor> tanksAssignToDistributor = _distributorService.GetTanksFroDistributor(id);
+            List<TankDistributor> tanksAssignToDistributor = _distributorService.GetTanksForDistributor(id);
 
 
             foreach (var item in tanksAssignToDistributor)
             {
                 Tank model = _tankService.GetById(item.TankId);
+                Product product = _productService.GetById(model.ProductId);
+                model.Product = product;
                 tanks.Add(model);
             }
 
