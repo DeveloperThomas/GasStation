@@ -30,6 +30,7 @@ namespace GasStation
             services.AddControllersWithViews().AddRazorRuntimeCompilation();
             services.AddScoped<ProductService>();
             services.AddScoped<DiscountService>();
+            services.AddScoped<FuelingService>();
             services.AddScoped<DistributorService>();
             services.AddScoped<TankService>();
             services.AddScoped<TankDistributorService>();
