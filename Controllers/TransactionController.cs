@@ -64,7 +64,11 @@ namespace GasStation.Controllers
                 }
             };
 
-            ViewData["ProductIds"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
+            transactionCreate.TransactionProduct = new List<TransactionProduct>();
+
+            foreach (var product in _productService.GetAllProducts().ToList())
+                transactionCreate.TransactionProduct.Add(new TransactionProduct(product, 0));
+
             ViewData["LoyaltyCardId"] = new SelectList(_loyaltyCardService.GetAllLoyaltyCards(), "LoyaltyCardId", "LoyaltyCardId");
 
             return View(transactionCreate);

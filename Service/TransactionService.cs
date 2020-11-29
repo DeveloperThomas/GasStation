@@ -50,9 +50,9 @@ namespace GasStation.Service
                 _context.SaveChanges();
 
 
-                foreach (var productId in transactionCreate.ProductIds)
+                foreach (var transactionProduct in transactionCreate.TransactionProduct)
                 {
-                    var productList = _productsListService.CreateProductsLists(transaction.TransactionId, productId, 1);
+                    var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.Product.ProductId, transactionProduct.Amount);
                     transaction.ProductsLists.Add(productList);
                 }
 
