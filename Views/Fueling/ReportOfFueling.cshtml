@@ -1,12 +1,12 @@
-﻿@model GasStation.Models.ReportSale
+﻿@model GasStation.Models.FuelingReport
 
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
 
-<h2 style="text-align:center;">Raport sprzedaży produktów</h2>
-<form asp-action="ReportOfSales" method="post">
+<h2 style="text-align:center;">Raport tankowań na stacji</h2>
+<form asp-action="ReportOfFueling" method="post">
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
@@ -36,41 +36,49 @@
     <thead>
         <tr>
             <th>
-                Nazwa
+                Dystrybutor
             </th>
             <th>
-                Cena
+               Zbiornik
             </th>
             <th>
-                Wartość w punktach
+                Data tankowania
             </th>
             <th>
                 Ilość na stanie
             </th>
-            <th></th>
+            <th>
+                Ilość(litry)
+            </th>
+            <th>
+                Wartość(zł)
+            </th>
+            <th>
+                Wartość w punktach
+            </th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Products)
+        @foreach (var item in Model.Fuelings)
         {
             <tr>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Name)
+                    @Html.DisplayFor(modelItem => item.DistributorId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TankId)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Date)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Amount)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.LoyaltyPointsPrice)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Stock)
-                </td>
-                <td>
-                    <a style="background-color:lightblue;" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-default" title="Edycja"><i class="fas fa-pencil-alt"></i></a>
-                    <span><a style="color:white;background-color:red;" onclick="deleteFunction('@item.ProductId')" class="btn btn-default " title="Usuwanie"><i class="fa fa-trash "></i> </a></span>
-
-
+                    @Html.DisplayFor(modelItem => item.PriceInPoints)
                 </td>
             </tr>
         }

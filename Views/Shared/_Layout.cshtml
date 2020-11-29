@@ -69,10 +69,16 @@
 
                             <a asp-action="Index" asp-controller="Distributor" class="btn btn-info">Dystrybutory</a>
                         </li>
-                        <li class="nav-item">
-
-                            <a asp-action="ReportOfSales" asp-controller="Report" class="btn btn-success">Generowanie raportu</a>
+                        <li class="nav-item dropdown">
+                            <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Raporty
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a asp-action="ReportOfSales" asp-controller="Report" class="btn btn-success">Raport sprzedaży</a>
+                                <a asp-action="ReportOfFueling" asp-controller="Fueling" class="dropdown-item">Tankowania</a>
+                            </div>
                         </li>
+
                         <li class="nav-item">
 
                             <a asp-action="Index" asp-controller="Discount" class="btn btn-warning">Karty lojalnościowe</a>
