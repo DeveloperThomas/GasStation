@@ -19,13 +19,17 @@ namespace GasStation.Service
 
         public Tank GetById(int id)
         {
-            return _context.Tanks.Where(x => x.TankId == id).FirstOrDefault();
+            return _context.Tanks.Where(x => x.TankId == id).Include(item=>item.Product).FirstOrDefault();
         }
         public IEnumerable<Tank> GetAllTanks()
         {
             return _context.Tanks.Include(x=>x.Product);
         }
-
+        public IEnumerable<TankDistributor> GetTanksByDistributor(int distributorId)
+        {
+            return _context.TankDistributors.Where(x => x.DistributorId == distributorId).ToList();
+        }
+        
         public void Create(Tank tank)
         {
             try
@@ -55,6 +59,7 @@ namespace GasStation.Service
             }
 
         }
+
         public void Delete(int tankId)
         {
             try

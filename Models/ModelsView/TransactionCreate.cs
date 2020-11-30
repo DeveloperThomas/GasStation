@@ -11,8 +11,9 @@ namespace GasStation.Models.ModelsView
     {
         public Transaction Transaction { get; set; }
         public List<TransactionProduct> TransactionProduct { get; set; }
+        public List<DistributorInTransaction> DistributorInTransaction { get; set; }
         public List<SelectListItem> TypesOfPayment { get; set; }
-
+        public string NameOfPayment { get; set; }
     }
 
 }

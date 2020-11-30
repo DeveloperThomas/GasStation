@@ -17,12 +17,19 @@ namespace GasStation.Service
         private readonly AppDbContext _context;
         private readonly AccountService _accountService;
         private readonly ProductsListService _productsListService;
+        private readonly FuelingService _fuelingService;
+        private readonly ProductService _productService;
+        private readonly TankService  _tankService;
 
-        public TransactionService(AppDbContext context, AccountService accountService, ProductsListService productsListService)
+        public TransactionService(AppDbContext context, AccountService accountService, ProductsListService productsListService,
+            FuelingService fuelingService, ProductService productService, TankService tankService)
         {
             _context = context;
             _accountService = accountService;
             _productsListService = productsListService;
+            _fuelingService = fuelingService;
+            _productService = productService;
+            _tankService = tankService;
         }
 
         public Transaction GetById(int id)
@@ -45,15 +52,40 @@ namespace GasStation.Service
                 Transaction transaction = transactionCreate.Transaction;
                 transaction.ApplicationUserId = _accountService.GetCurrentUserId();
                 transaction.ProductsLists = new List<ProductsList>();
-
+                transaction.Date = DateTime.Now;
                 _context.Add(transaction);
                 _context.SaveChanges();
 
 
                 foreach (var transactionProduct in transactionCreate.TransactionProduct)
                 {
-                    var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.Product.ProductId, transactionProduct.Amount);
-                    transaction.ProductsLists.Add(productList);
+                    if(transactionProduct.InTransaction)
+                    {
+                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.ProductId, transactionProduct.Amount);
+                        transaction.ProductsLists.Add(productList);
+                    }
+          
+                }
+                foreach (var distributor in transactionCreate.DistributorInTransaction)
+                {
+                    if (distributor.InTransaction)
+                    {
+                        Fueling fueling = new Fueling();
+                        fueling.TankId = distributor.TankId;
+                        fueling.DistributorId = distributor.DistributorId;
+                        fueling.Date = DateTime.Now;
+                        fueling.Amount = distributor.Counter;
+                        fueling.Price = distributor.Sum;
+                        _fuelingService.Create(fueling);
+
+                        Tank tank = _tankService.GetById(distributor.TankId);
+                        Product product = _productService.GetById(tank.ProductId);
+
+                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, product.ProductId, distributor.Counter);
+                        transaction.ProductsLists.Add(productList);
+                    }
+
+
                 }
 
                 _context.SaveChanges();

@@ -1,54 +1,329 @@
 ﻿@model GasStation.Models.ModelsView.TransactionCreate
 
-@{
-    ViewData["Title"] = "Create";
-}
 
-<h1>Create</h1>
+<link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
 
-<h4>Transaction</h4>
-<hr />
-<div class="row">
-    <div class="col-md-4">
-        <form asp-action="Create">
-            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-            <div class="form-group">
-                <label asp-for="Transaction.LoyaltyCardId" class="control-label"></label>
-                <select asp-for="Transaction.LoyaltyCardId" class ="form-control" asp-items="ViewBag.LoyaltyCardId"></select>
-            </div>
-            @foreach (var transactionProduct in Model.TransactionProduct) 
+<script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+
+<h1 style="text-align:center;">Utwórz nową transakcję</h1>
+
+<form asp-action="Create">
+    <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+    <br/>
+    <h3 style="text-align:center;">Dostępne dystrybutory</h3>
+
+    <table class="display" id="distributorTable">
+        <thead>
+            <tr>
+                <th>
+                    Indentyfikator
+                </th>
+                <th>
+                    Nazwa paliwa
+                </th>
+                <th>
+                    Licznik
+                </th>
+                <th>
+                    Cena za litr
+                </th>
+                <th>
+                    Suma
+                </th>
+                <th>
+                    Czy zablokowany?
+                </th>
+                <th>
+                    Czy dodać?
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (var i = 0; i < Model.DistributorInTransaction.Count; i++)
             {
-                <p>Name = @transactionProduct.Product.Name</p>
-                <p>Amount = @transactionProduct.Amount</p>
-                <input asp-for="@transactionProduct.Product" class="form-control" />
-                <input asp-for="@transactionProduct.Amount" class="form-control" />
+            <tr>
+                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].DistributorId />
+                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].TankId />
+                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Counter />
+                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].PriceForLiter />
+                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Sum />
+                <td>
+                    @Model.DistributorInTransaction[i].DistributorId
+                </td>
+                <td>
+                    @Model.DistributorInTransaction[i].NameOfFuel
+                </td>
+                <td>
+                    @Model.DistributorInTransaction[i].Counter
+             
+                </td>
+                <td>
+                    @Model.DistributorInTransaction[i].PriceForLiter
+                </td>
+                <td>
+                    @Model.DistributorInTransaction[i].Sum
+                    <input id="sumDistributor_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].Sum hidden />
+                </td>
+                <td>
+                    @Model.DistributorInTransaction[i].IsLocked
+                </td>
+                <td>
+                    <input id="isCheck_@i.ToString()" class="form-check-input" asp-for=@Model.DistributorInTransaction[i].InTransaction onchange="distributorValue(@i)"/>
+                </td>
+            </tr>
             }
+        </tbody>
+    </table>
+    <hr />
+    <br />
+    <div class="row">
+        <div class="col-md-6">
             <div class="form-group">
-                <label asp-for="Transaction.Date" class="control-label"></label>
-                <input asp-for="Transaction.Date" class="form-control" />
-                <span asp-validation-for="Transaction.Date" class="text-danger"></span>
+                <label asp-for="Transaction.LoyaltyCardId" class="control-label">Nr karty</label>
+                <select asp-for="Transaction.LoyaltyCardId" class="form-control" asp-items="ViewBag.LoyaltyCardId"></select>
             </div>
+
+        </div>
+
+    </div>
+
+    <table class="display" id="productTransactionTable">
+        <thead>
+            <tr>
+                <th>
+                    Nazwa
+                </th>
+                <th>
+                    Ilość
+                </th>
+                <th>
+                    Cena za sztukę
+                </th>
+                <th>
+                    Wartość
+                </th>
+                <th>
+                    Czy dodać?
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+
+            @for (var i = 0; i < Model.TransactionProduct.Count; i++)
+            {
+                <tr>
+                    <input type="hidden" asp-for=@Model.TransactionProduct[i].ProductId />
+                    <td>
+                        @Model.TransactionProduct[i].Name
+                    </td>
+                    <td>
+                        <input id="amountProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Amount onchange="sumProducts(@i)"/>
+                    </td>
+                    <td>
+                       @Model.TransactionProduct[i].Price
+                    </td>
+                    <td>
+                        <input id="sumproduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Price hidden />
+                     <span id="sumproductFinal_@i.ToString()" asp-for=@Model.TransactionProduct[i].SumMoneyForProduct value=@Model.TransactionProduct[i].SumMoneyForProduct ></span>
+                    </td>
+                    <td>
+                        <input id="isCheckProduct_@i.ToString()"  class="form-check-input" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)"/>
+                    </td>
+
+
+                </tr>
+            }
+        </tbody>
+    </table>
+    <br/>
+    <br/>
+    <br/>
+    <div class="row">
+        <div class="col-md-4">
             <div class="form-group">
-                <label asp-for="Transaction.PaymentType" class="control-label"></label>
-                    <select class="form-control" asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment"></select>
+                <label asp-for="Transaction.PaymentType" class="control-label">Rodzaj płatności</label>
+                <select class="form-control" asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment"></select>
                 <span asp-validation-for="Transaction.PaymentType" class="text-danger"></span>
             </div>
-            <div class="form-group">
-                <label asp-for="Transaction.PaymentConfirmationRequested" class="control-label"></label>
-                <input asp-for="Transaction.PaymentConfirmationRequested" class="form-control" />
-                <span asp-validation-for="Transaction.PaymentConfirmationRequested" class="text-danger"></span>
+        </div>
+        <div class="col-md-4">
+
+            <div class="form-group form-check">
+                <label class="form-check-label">
+                    @Html.DisplayName("Czy potwierdzenie?")
+                    <br />
+                    <input class="form-check-input" asp-for="Transaction.PaymentConfirmationRequested" style="width: 25px; height: 25px;" />
+                </label>
             </div>
+
+        </div>
+        <div class="col-md-4">
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <label style=" font-weight: bold;">Suma końcowa</label>
+             <input id="sumValue" />
+      
+
             </div>
-        </form>
+        </div>
     </div>
-</div>
+    <input type="button" onclick="myFunction()" value="Faktura" checked="" class="btn btn-primary">
+    <br/>
+    <br/>
+    <div id="myDIV">
+        
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Transaction.Invoice.NIP" class="control-label">NIP firmy</label>
+                    <input asp-for="Transaction.Invoice.NIP" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Transaction.Invoice.RegistrationNumber" class="control-label">Nr rejestracji</label>
+                    <input asp-for="Transaction.Invoice.RegistrationNumber" class="form-control" />
+                </div>
+            </div>
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Transaction.Invoice.InvoiceNumber" class="control-label">Nr faktury</label>
+                    <input asp-for="Transaction.Invoice.InvoiceNumber" class="form-control" />
+                </div>
+            </div>
+        </div>
+    </div>
+    <br/>
+    <br/>
+    <br/>
+        <div class="form-group">
+
+            <input type="submit" value="Dodaj" class="btn btn-primary" />
+        </div>
+</form>
+
+
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Powrót do listy transakcji</a>
 </div>
 
 @section Scripts {
     @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
 }
+
+<script type="text/javascript">
+    function myFunction() {
+        var x = document.getElementById("myDIV");
+        if (x.style.display === "none") {
+            x.style.display = "block";
+        } else {
+            x.style.display = "none";
+        }
+    }
+
+    $(document).ready(function () {
+        var x = document.getElementById("myDIV");
+        x.style.display = "none";
+        $('#productTransactionTable').DataTable({
+            "iDisplayLength": 10,
+            "language": {
+                "sSearch": "Szukaj",
+                "productTable": "Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+        $('#distributorTable').DataTable({
+            "iDisplayLength": 10,
+            "language": {
+                "sSearch": "Szukaj",
+                "productTable": "Pokaż",
+                "sSearchPlaceholder": "Wyszukiwarka",
+                "zeroRecords": "Nie znaleziono żadnych danych",
+                "paginate": {
+                    "previous": "Poprzednia",
+                    "next": "Następna",
+                },
+                "info": "Pokaż _PAGE_ of _PAGES_",
+                "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
+            }
+        });
+    });
+    
+
+
+    function sumProducts(index) {
+        var amountProduct_ = document.getElementById("amountProduct_" + index).value;
+        var product = document.getElementById("sumproduct_" + index).value;
+
+        var sumValue = amountProduct_ * product;
+
+
+        document.getElementById("sumproductFinal_" + index).innerHTML = sumValue;
+    }
+
+
+    function sumValueOfFromProduct(index) {
+        var amountProduct_ = document.getElementById("amountProduct_" + index).value;
+        var valueProduct = $("#sumproductFinal_" + index).text();
+        var sumValue = $('#sumValue').val();
+
+        if (document.getElementById('isCheckProduct_' + index).checked) {
+
+            if (sumValue == null || sumValue == '') sumValue = 0;
+
+            if (amountProduct_ != null && amountProduct_ != '' && amountProduct_>0 ) {
+                var finalSum = parseFloat(valueProduct) + parseFloat(sumValue);
+                console.log("eee"+amountProduct_);
+                $("#sumValue").val(finalSum);
+            }
+
+
+        } else {
+           
+            if (sumValue == null || sumValue == '') sumValue = 0;
+
+            if (sumValue != null && sumValue != '' && amountProduct_ != null && amountProduct_ != '' && amountProduct_ > 0 ) {
+                var finalSum = parseFloat(sumValue) - parseFloat(valueProduct);
+
+                $("#sumValue").val(finalSum);
+            }
+
+        }
+
+    }
+
+    function distributorValue(index) {
+
+        var valueDistributor = $("#sumDistributor_" + index).val();
+        var sumValue = $('#sumValue').val();
+
+
+        if (document.getElementById('isCheck_' + index).checked) {
+
+            if (sumValue == null || sumValue == '') sumValue = 0;
+
+            var finalSum = parseFloat(valueDistributor) + parseFloat(sumValue);
+       
+            $("#sumValue").val(finalSum);
+        } else {
+         
+            if (sumValue == null || sumValue == '') sumValue = 0;
+            if (sumValue != '' && sumValue != null) {
+                var finalSum = parseFloat(sumValue) - parseFloat(valueDistributor);
+
+                $("#sumValue").val(finalSum);
+            }
+      
+        }
+      
+    }
+</script>

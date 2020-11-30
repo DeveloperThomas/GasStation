@@ -41,18 +41,15 @@
 
     </script>
     <header>
-        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow mb-3">
+        <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Home" asp-action="Index">Strona główna</a>
+                <a class="navbar-brand" asp-area="" asp-controller="Transaction" asp-action="Index">Strona główna</a>
                 <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
                         aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Discount" class="btn btn-primary">Lista transakcji</a>
-                        </li>
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="Product" class="btn btn-primary">Produkty</a>
 
@@ -81,9 +78,6 @@
 
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="LoyaltyCard" class="btn btn-primary">Karty lojalnościowe</a>
-                        </li>
-                        <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Transaction" class="btn btn-primary">Transakcje</a>
                         </li>
                         @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
                         {
@@ -131,6 +125,7 @@
         </nav>
     </header>
     <div class="container">
+        <br/>
         <main role="main" class="pb-3">
             @RenderBody()
         </main>

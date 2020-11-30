@@ -20,9 +20,14 @@ namespace GasStation.Service
         {
             return _context.Products.Where(x => x.ProductId == id).FirstOrDefault();
         }
+        
         public IEnumerable<Product> GetAllProducts()
         {
             return _context.Products;
+        }
+        public IEnumerable<Product> GetAllProductsWithoutFuel()
+        {
+            return _context.Products.Where(x=>x.Is_Fuel==false).ToList();
         }
         public IEnumerable<Product> GetAllProductsForTank()
         {
