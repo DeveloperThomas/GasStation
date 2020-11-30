@@ -5,15 +5,11 @@ using System.Threading.Tasks;
 
 namespace GasStation.Models.ModelsView
 {
-    public class TransactionProduct
+    public class TransactionProduct:Product
     {
-        public Product Product { get; set; }
         public float Amount { get; set; }
+        public bool InTransaction { get; set; }
+        public float SumMoneyForProduct { get; set; }
 
-        public TransactionProduct(Product product, float amount)
-        {
-            this.Product = product;
-            this.Amount = amount;
-        }
     }
 }

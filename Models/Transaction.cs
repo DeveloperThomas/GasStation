@@ -21,8 +21,8 @@ namespace GasStation.Models
         [Required]
         public DateTime Date { get; set; }
         [Required]
-        public string PaymentType { get; set; }
-        public bool? PaymentConfirmationRequested { get; set; }
+        public int PaymentType { get; set; }
+        public bool PaymentConfirmationRequested { get; set; }
         public ICollection<ProductsList> ProductsLists { get; set; }
         public Invoice Invoice { get; set; }
     }
