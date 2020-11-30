@@ -70,12 +70,14 @@ namespace GasStation.Service
                 {
                     if (distributor.InTransaction)
                     {
-                        Fueling fueling = new Fueling();
-                        fueling.TankId = distributor.TankId;
-                        fueling.DistributorId = distributor.DistributorId;
-                        fueling.Date = DateTime.Now;
-                        fueling.Amount = distributor.Counter;
-                        fueling.Price = distributor.Sum;
+                        Fueling fueling = new Fueling
+                        {
+                            TankId = distributor.TankId,
+                            DistributorId = distributor.DistributorId,
+                            Date = DateTime.Now,
+                            Amount = distributor.Counter,
+                            Price = distributor.Sum
+                        };
                         _fuelingService.Create(fueling);
 
                         Tank tank = _tankService.GetById(distributor.TankId);

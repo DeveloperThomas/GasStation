@@ -47,8 +47,10 @@ namespace GasStation.Controllers
             List<TransactionCreate> transactionListView = new List<TransactionCreate>();
             foreach (var item in transactions)
             {
-                TransactionCreate model = new TransactionCreate();
-                model.Transaction = item;
+                TransactionCreate model = new TransactionCreate
+                {
+                    Transaction = item
+                };
 
                 if (item.PaymentType==0)
                 {
@@ -94,12 +96,14 @@ namespace GasStation.Controllers
         
             foreach (var product in _productService.GetAllProductsWithoutFuel().ToList())
             {
-                TransactionProduct model = new TransactionProduct();
-                model.ProductId = product.ProductId;
-                model.Name = product.Name;
-                model.Price = product.Price;
-                model.LoyaltyPointsPrice = product.LoyaltyPointsPrice;
-                model.Amount = 0;
+                TransactionProduct model = new TransactionProduct
+                {
+                    ProductId = product.ProductId,
+                    Name = product.Name,
+                    Price = product.Price,
+                    LoyaltyPointsPrice = product.LoyaltyPointsPrice,
+                    Amount = 0
+                };
 
                 transactionCreate.TransactionProduct.Add(model);
             }
@@ -116,9 +120,9 @@ namespace GasStation.Controllers
                 {
                     listOfTanksIds.Add(item.TankId);
                 }
-               listOfTanksIds.Sort();
+                listOfTanksIds.Sort();
                 Random r = new Random();
-                int randomTankId =  r.Next(listOfTanksIds[0], listOfTanksIds[listOfTanksIds.Count-1]);
+                int randomTankId =  r.Next(listOfTanksIds[0], listOfTanksIds[^1]);
                 Tank tank = _tankService.GetById(randomTankId);
                 model.NameOfFuel = tank.Product.Name;
                 model.PriceForLiter = tank.Product.Price;
