@@ -21,7 +21,11 @@ namespace GasStation.Models
         public int Type { get; set; }
         [Required]
         public float Value { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime BeginDate { get; set; }
+
+        [DataType(DataType.Date)]
         public DateTime FinishDate { get; set; }
     }
 }

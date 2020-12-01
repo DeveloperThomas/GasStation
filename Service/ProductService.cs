@@ -33,6 +33,13 @@ namespace GasStation.Service
         {
             return _context.Products.Where(x=>x.Is_Fuel==true);
         }
+
+        public IEnumerable<Product> GetProductsBeetwenDates(DateTime dateFrom, DateTime dateTo)
+        {
+            //List<Transaction> 
+            //return _context.Products.Where(x => x.date>= dateFrom && x.Date <= dataTo).ToList();
+            return new List<Product>();
+        }
         public void Create(Product product)
         {
             try

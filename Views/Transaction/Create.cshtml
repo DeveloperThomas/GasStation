@@ -57,7 +57,6 @@
                 </td>
                 <td>
                     @Model.DistributorInTransaction[i].Counter
-             
                 </td>
                 <td>
                     @Model.DistributorInTransaction[i].PriceForLiter
@@ -121,8 +120,6 @@
                     <td class="text-center">
                         <input id="isCheckProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)"/>
                     </td>
-
-
                 </tr>
             }
         </tbody>
@@ -134,7 +131,7 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Transaction.PaymentType" class="control-label">Rodzaj płatności</label>
-                <select id="paymentType" onchange="changePaymentType()" class="form-control" asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment"></select>
+                <select asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment" id="paymentType" onchange="changePaymentType()" class="form-control" ></select>
                 <span asp-validation-for="Transaction.PaymentType" class="text-danger"></span>
             </div>
         </div>
@@ -235,6 +232,7 @@
         paymentConfirmationRequested.style.visibility = "hidden";
         var loyaltyCard = document.getElementById("loyaltyCard");
         loyaltyCard.style.display = "none";
+        document.getElementById("paymentType").value;
 
         $("#loyaltyCardSelect").prepend("<option value='' selected='selected'>Nie wybieraj</option>");
 

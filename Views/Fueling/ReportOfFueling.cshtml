@@ -2,23 +2,35 @@
 
 
 <link rel="stylesheet" type="text/css" href="https://cdn.datatables.net/1.10.22/css/jquery.dataTables.css">
-
 <script type="text/javascript" charset="utf8" src="https://cdn.datatables.net/1.10.22/js/jquery.dataTables.js"></script>
+
+<link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
+<script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
 
 <h2 style="text-align:center;">Raport tankowań na stacji</h2>
 <form asp-action="ReportOfFueling" method="post">
     <div class="row">
         <div class="col-md-4">
-            <div class="form-group">
-                <label asp-for="DateFrom" class="control-label">Data początkowa</label>
-                <input asp-for="DateFrom" class="form-control" />
+<div class="form-group">
+                <label asp-for="DateFrom" class="control-label">Data rozpoczęcia</label>
+                <div class="input-group date" data-provide="datepicker">
+                    <input asp-for="DateFrom" type="text" class="form-control" id="beginDate"/>
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
                 <span asp-validation-for="DateFrom" class="text-danger"></span>
             </div>
         </div>
         <div class="col-md-4">
             <div class="form-group">
-                <label asp-for="DateTo" class="control-label">Data końcowa</label>
-                <input asp-for="DateTo" class="form-control" />
+                <label asp-for="DateTo" class="control-label">Data zakończenia</label>
+                <div class="input-group date" data-provide="datepicker">
+                    <input asp-for="DateTo" type="text" class="form-control" id="finishDate"/>
+                    <div class="input-group-addon">
+                        <span class="glyphicon glyphicon-th"></span>
+                    </div>
+                </div>
                 <span asp-validation-for="DateTo" class="text-danger"></span>
             </div>
         </div>
@@ -105,6 +117,15 @@
                 "lengthMenu": "Pokaż _MENU_ rekordów na stronie",
             }
         });
+
+        $(".beginDate").datepicker({ defaultDate: new Date() });
+        $(".finishDate").datepicker({ defaultDate: new Date() });
+    });
+
+    $.fn.datepicker.defaults.format = "mm/dd/yyyy";
+    $('.datepicker').datepicker({
+        dateFormat: 'mm/dd/yyyy',
+        startDate: '0d'
     });
 
 </script>
