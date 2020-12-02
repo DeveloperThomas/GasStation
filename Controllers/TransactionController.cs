@@ -21,7 +21,7 @@ namespace GasStation.Controllers
         private readonly ProductsListService _productsListService;
         private readonly DistributorService _distributorService;
         private readonly TankService _tankService;
-        
+        private readonly DiscountService _discountService;
 
         public TransactionController(TransactionService transactionService,
             AccountService accountService,
@@ -29,7 +29,8 @@ namespace GasStation.Controllers
             ProductService productService,
             ProductsListService productsListService,
             DistributorService distributorService,
-            TankService tankService)
+            TankService tankService,
+            DiscountService discountService)
         {
             _transactionService = transactionService;
             _accountService = accountService;
@@ -38,6 +39,7 @@ namespace GasStation.Controllers
             _productsListService = productsListService;
             _distributorService = distributorService;
             _tankService = tankService;
+            _discountService = discountService;
         }
 
         // GET: Transaction
@@ -47,20 +49,19 @@ namespace GasStation.Controllers
             List<TransactionCreate> transactionListView = new List<TransactionCreate>();
             foreach (var item in transactions)
             {
-                TransactionCreate model = new TransactionCreate();
-                model.Transaction = item;
+                TransactionCreate model = new TransactionCreate
+                {
+                    Transaction = item
+                };
 
                 if (item.PaymentType==0)
-                {
                     model.NameOfPayment = "Gotówka";
-                }
                 else
-                {
                     model.NameOfPayment = "Karta";
-                }
-                transactionListView.Add(model);
 
+                transactionListView.Add(model);
             }
+
             return View(transactionListView);
         }
 
@@ -94,12 +95,33 @@ namespace GasStation.Controllers
         
             foreach (var product in _productService.GetAllProductsWithoutFuel().ToList())
             {
-                TransactionProduct model = new TransactionProduct();
-                model.ProductId = product.ProductId;
-                model.Name = product.Name;
-                model.Price = product.Price;
-                model.LoyaltyPointsPrice = product.LoyaltyPointsPrice;
-                model.Amount = 0;
+                TransactionProduct model = new TransactionProduct
+                {
+                    ProductId = product.ProductId,
+                    Name = product.Name,
+                    Price = product.Price,
+                    LoyaltyPointsPrice = product.LoyaltyPointsPrice,
+                    Amount = 0,
+                    IsDiscountIncluded = false
+                };
+
+                Discount discount = _discountService.GetDiscountForProduct(model.ProductId);
+                
+                if (discount != null)
+                {
+                    switch (discount.Type)
+                    {
+                        case 0:
+                            model.IsDiscountIncluded = true;
+                            break;
+                        case 1:
+                            model.IsDiscountIncluded = true;
+                            break;
+                        default:
+                            model.IsDiscountIncluded = false;
+                            break;
+                    }
+                }
 
                 transactionCreate.TransactionProduct.Add(model);
             }
@@ -116,16 +138,16 @@ namespace GasStation.Controllers
                 {
                     listOfTanksIds.Add(item.TankId);
                 }
-               listOfTanksIds.Sort();
+                listOfTanksIds.Sort();
                 Random r = new Random();
-                int randomTankId =  r.Next(listOfTanksIds[0], listOfTanksIds[listOfTanksIds.Count-1]);
+                int randomTankId =  r.Next(listOfTanksIds[0], listOfTanksIds[^1]);
                 Tank tank = _tankService.GetById(randomTankId);
                 model.NameOfFuel = tank.Product.Name;
                 model.PriceForLiter = tank.Product.Price;
                 model.DistributorId = distributor.DistributorId;
                 model.TankId = tank.TankId;
                 r = new Random();
-                model.Counter = r.Next(0, 10000);
+                model.Counter = r.Next(0, 50);
                 model.Sum = model.Counter * model.PriceForLiter;
                 transactionCreate.DistributorInTransaction.Add(model);
             }

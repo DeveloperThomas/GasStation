@@ -57,7 +57,6 @@
                 </td>
                 <td>
                     @Model.DistributorInTransaction[i].Counter
-             
                 </td>
                 <td>
                     @Model.DistributorInTransaction[i].PriceForLiter
@@ -69,8 +68,8 @@
                 <td>
                     @Model.DistributorInTransaction[i].IsLocked
                 </td>
-                <td>
-                    <input id="isCheck_@i.ToString()" class="form-check-input" asp-for=@Model.DistributorInTransaction[i].InTransaction onchange="distributorValue(@i)"/>
+                <td class="text-center">
+                    <input id="isCheck_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].InTransaction onchange="distributorValue(@i)"/>
                 </td>
             </tr>
             }
@@ -78,16 +77,6 @@
     </table>
     <hr />
     <br />
-    <div class="row">
-        <div class="col-md-6">
-            <div class="form-group">
-                <label asp-for="Transaction.LoyaltyCardId" class="control-label">Nr karty</label>
-                <select asp-for="Transaction.LoyaltyCardId" class="form-control" asp-items="ViewBag.LoyaltyCardId"></select>
-            </div>
-
-        </div>
-
-    </div>
 
     <table class="display" id="productTransactionTable">
         <thead>
@@ -128,11 +117,9 @@
                         <input id="sumproduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Price hidden />
                      <span id="sumproductFinal_@i.ToString()" asp-for=@Model.TransactionProduct[i].SumMoneyForProduct value=@Model.TransactionProduct[i].SumMoneyForProduct ></span>
                     </td>
-                    <td>
-                        <input id="isCheckProduct_@i.ToString()"  class="form-check-input" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)"/>
+                    <td class="text-center">
+                        <input id="isCheckProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)"/>
                     </td>
-
-
                 </tr>
             }
         </tbody>
@@ -144,35 +131,28 @@
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Transaction.PaymentType" class="control-label">Rodzaj płatności</label>
-                <select class="form-control" asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment"></select>
+                <select asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment" id="paymentType" onchange="changePaymentType()" class="form-control" ></select>
                 <span asp-validation-for="Transaction.PaymentType" class="text-danger"></span>
             </div>
         </div>
-        <div class="col-md-4">
-
+        <div class="col-md-4" id="paymentConfirmationRequested">
             <div class="form-group form-check">
-                <label class="form-check-label">
-                    @Html.DisplayName("Czy potwierdzenie?")
-                    <br />
-                    <input class="form-check-input" asp-for="Transaction.PaymentConfirmationRequested" style="width: 25px; height: 25px;" />
-                </label>
+                <label asp-for="Transaction.PaymentConfirmationRequested" class="control-label">Potwierdzenie</label>
+                <input class="form-control" asp-for="Transaction.PaymentConfirmationRequested" style="width: 25px; height: 25px;" />
             </div>
-
         </div>
         <div class="col-md-4">
-            <div class="form-group">
-                <label style=" font-weight: bold;">Suma końcowa</label>
-             <input id="sumValue" />
-      
-
+            <div class="form-group align-middle">
+                <label>Suma końcowa</label>
+                <input id="sumValue" readonly/>
             </div>
         </div>
     </div>
-    <input type="button" onclick="myFunction()" value="Faktura" checked="" class="btn btn-primary">
+    <input type="button" onclick="myFunction()" value="Faktura" checked="" class="btn btn-primary"/>
+    <input type="button" onclick="selectLoyaltyCard()" value="Karta lojalnościowa" checked="" class="btn btn-primary"/>
     <br/>
     <br/>
     <div id="myDIV">
-        
         <div class="row">
             <div class="col-md-4">
                 <div class="form-group">
@@ -194,11 +174,20 @@
             </div>
         </div>
     </div>
+    <div id="loyaltyCard">
+        <div class="row">
+            <div class="col-md-4">
+                <div class="form-group">
+                    <label asp-for="Transaction.LoyaltyCardId" class="control-label">Nr karty</label>
+                    <select id="loyaltyCardSelect" asp-for="Transaction.LoyaltyCardId" class="form-control" asp-items="ViewBag.LoyaltyCardId"></select>
+                </div>
+            </div>
+        </div>
+    </div>
     <br/>
     <br/>
     <br/>
         <div class="form-group">
-
             <input type="submit" value="Dodaj" class="btn btn-primary" />
         </div>
 </form>
@@ -223,9 +212,30 @@
         }
     }
 
+    function selectLoyaltyCard() {
+        var loyaltyCard = document.getElementById("loyaltyCard");
+        loyaltyCard.style.display = loyaltyCard.style.display == "none" ? "block" : "none";
+    }
+
+    function changePaymentType() {
+        var selectedPaymentType = document.getElementById("paymentType");
+        var selectedPaymentTypeValue = selectedPaymentType.value;
+        var paymentConfirmationRequested = document.getElementById("paymentConfirmationRequested");
+
+        paymentConfirmationRequested.style.visibility = selectedPaymentTypeValue == "0" ? "hidden" : "visible";
+    }
+
     $(document).ready(function () {
         var x = document.getElementById("myDIV");
         x.style.display = "none";
+        var paymentConfirmationRequested = document.getElementById("paymentConfirmationRequested");
+        paymentConfirmationRequested.style.visibility = "hidden";
+        var loyaltyCard = document.getElementById("loyaltyCard");
+        loyaltyCard.style.display = "none";
+        document.getElementById("paymentType").value;
+
+        $("#loyaltyCardSelect").prepend("<option value='' selected='selected'>Nie wybieraj</option>");
+
         $('#productTransactionTable').DataTable({
             "iDisplayLength": 10,
             "language": {

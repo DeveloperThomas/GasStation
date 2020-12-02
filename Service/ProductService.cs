@@ -10,10 +10,12 @@ namespace GasStation.Service
     public class ProductService
     {
         private readonly AppDbContext _context;
+        private readonly DiscountService _discountService;
 
-        public ProductService(AppDbContext context)
+        public ProductService(AppDbContext context, DiscountService discountService)
         {
             _context = context;
+            _discountService = discountService;
         }
 
         public Product GetById(int id)
@@ -23,15 +25,44 @@ namespace GasStation.Service
         
         public IEnumerable<Product> GetAllProducts()
         {
+            List<Product> productsIncludingDiscounts = _context.Products.ToList();
+
+            foreach (Product product in productsIncludingDiscounts)
+            {
+                Discount discount = _discountService.GetDiscountForProduct(product.ProductId);
+
+                if (discount != null)
+                {
+                    switch (discount.Type)
+                    {
+                        case 0:
+                            product.Price -= discount.Value;
+                            break;
+                        case 1:
+                            product.Price *= (float)Math.Round(1.0 - (discount.Value / 100), 2);
+                            break;
+                        default:
+                            break;
+                    }
+                }
+            }
+
             return _context.Products;
         }
         public IEnumerable<Product> GetAllProductsWithoutFuel()
         {
-            return _context.Products.Where(x=>x.Is_Fuel==false).ToList();
+            return GetAllProducts().Where(x=>x.Is_Fuel==false).ToList();
         }
         public IEnumerable<Product> GetAllProductsForTank()
         {
-            return _context.Products.Where(x=>x.Is_Fuel==true);
+            return GetAllProducts().Where(x=>x.Is_Fuel==true);
+        }
+
+        public IEnumerable<Product> GetProductsBeetwenDates(DateTime dateFrom, DateTime dateTo)
+        {
+            //List<Transaction> 
+            //return _context.Products.Where(x => x.date>= dateFrom && x.Date <= dataTo).ToList();
+            return new List<Product>();
         }
         public void Create(Product product)
         {

@@ -54,7 +54,7 @@ namespace GasStation.Controllers
                     }
                     else
                     {
-                        return RedirectToAction("index", "home");
+                        return RedirectToAction("index", "transaction");
                     }
                 }
 

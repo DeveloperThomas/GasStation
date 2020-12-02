@@ -43,82 +43,82 @@
     <header>
         <nav class="navbar navbar-expand-sm navbar-toggleable-sm navbar-light bg-white border-bottom box-shadow ">
             <div class="container">
-                <a class="navbar-brand" asp-area="" asp-controller="Transaction" asp-action="Index">Strona główna</a>
-                <button class="navbar-toggler" type="button" data-toggle="collapse" data-target=".navbar-collapse" aria-controls="navbarSupportedContent"
-                        aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
                 <div class="navbar-collapse collapse d-sm-inline-flex flex-sm-row-reverse">
                     <ul class="navbar-nav flex-grow-1">
                         <li class="nav-item">
-                            <a asp-action="Index" asp-controller="Product" class="btn btn-primary">Produkty</a>
-
-                        </li>
-                        <li class="nav-item">
-
-                            <a asp-action="Index" asp-controller="Discount" class="btn btn-primary">Promocje</a>
-                        </li>
-                        <li class="nav-item">
-
-                            <a asp-action="Index" asp-controller="Tank" class="btn btn-primary">Zbiorniki</a>
-                        </li>
-                        <li class="nav-item">
-
-                            <a asp-action="Index" asp-controller="Distributor" class="btn btn-primary">Dystrybutory</a>
+                            <a asp-area="" asp-controller="Transaction" asp-action="Index" class="btn btn-primary">Transakcje</a>
                         </li>
                         <li class="nav-item dropdown">
-                            <a class="nav-link dropdown-toggle btn btn-primary" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            <a class="btn btn-primary dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Asortyment
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a asp-action="Index" asp-controller="Product" class="dropdown-item">Produkty</a>
+                                <a asp-action="Index" asp-controller="Discount" class="dropdown-item">Promocje</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                Paliwo
+                            </a>
+                            <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                <a asp-action="Index" asp-controller="Tank"  class="dropdown-item">Zbiorniki</a>
+                                <a asp-action="Index" asp-controller="Distributor" class="dropdown-item">Dystrybutory</a>
+                            </div>
+                        </li>
+                        <li class="nav-item dropdown">
+                            <a class="btn btn-primary dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 Raporty
                             </a>
                             <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                <a asp-action="ReportOfSales" asp-controller="Report" class="btn">Raport sprzedaży</a>
+                                <a asp-action="ReportOfSales" asp-controller="Report" class="dropdown-item">Raport sprzedaży</a>
                                 <a asp-action="ReportOfFueling" asp-controller="Fueling" class="dropdown-item">Tankowania</a>
                             </div>
                         </li>
-
                         <li class="nav-item">
                             <a asp-action="Index" asp-controller="LoyaltyCard" class="btn btn-primary">Karty lojalnościowe</a>
                         </li>
-                        @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
-                        {
-                            <li class="nav-item">
-                                <form method="post" asp-action="logout" asp-controller="account">
-                                    <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
-                                        Wyloguj @User.Identity.Name
-                                    </button>
-                                </form>
-                            </li>
-                            <li class="nav-item dropdown">
-                                <a class="nav-link dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                    Zarządzanie
-                                </a>
-                                <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
-                                    <a asp-action="ListUsers" asp-controller="Administration" class="dropdown-item">Użytkownicy</a>
-                                    <a asp-action="ListRoles" asp-controller="Administration" class="dropdown-item">Role</a>
-                                    <a asp-action="EditUser" asp-controller="Account" class="dropdown-item">Konto</a>
-                                </div>
-                            </li>
-                        }
-                        else if (signInManager.IsSignedIn(User) && !User.IsInRole("Administrator"))
-                        {
-                            <li class="nav-item">
-                                <form method="post" asp-action="logout" asp-controller="account">
-                                    <button type="submit" class="nav-link btn btn-link py-0" style="width:auto">
-                                        Wyloguj @User.Identity.Name
-                                    </button>
-                                </form>
-                            </li>
-                            <li class="nav-item">
-                                <a asp-action="EditUser" asp-controller="Account" class="nav-link btn btn-link py-0">Zarządzanie kontem</a>
-                            </li>
-                        }
-                        else
-                        {
-                            <li class="nav-item">
-                                <a asp-action="login" asp-controller="account" class="nav-link btn btn-link py-0">Logowanie</a>
-                            </li>
-                        }
-
+                        <div class="collapse navbar-collapse justify-content-end">
+                            @if (signInManager.IsSignedIn(User) && User.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item dropdown">
+                                    <a class="btn btn-secondary dropdown-toggle" href="#" id="navbarDropdownMenuLink" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                        Zarządzanie
+                                    </a>
+                                    <div class="dropdown-menu" aria-labelledby="navbarDropdownMenuLink">
+                                        <a asp-action="ListUsers" asp-controller="Administration" class="dropdown-item">Użytkownicy</a>
+                                        <a asp-action="ListRoles" asp-controller="Administration" class="dropdown-item">Role</a>
+                                        <a asp-action="EditUser" asp-controller="Account" class="dropdown-item">Konto</a>
+                                    </div>
+                                </li>
+                                <li class="nav-item justify-content-end">
+                                    <form method="post" asp-action="logout" asp-controller="account">
+                                        <button type="submit" class="btn btn-danger" style="width:auto">
+                                            Wyloguj się
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                            else if (signInManager.IsSignedIn(User) && !User.IsInRole("Administrator"))
+                            {
+                                <li class="nav-item">
+                                    <a asp-action="EditUser" asp-controller="Account" class="nav-link btn btn-link py-0">Zarządzanie kontem</a>
+                                </li>
+                                <li class="nav-item justify-content-end">
+                                    <form method="post" asp-action="logout" asp-controller="account">
+                                        <button type="submit" class="btn btn-danger" style="width:auto">
+                                            Wyloguj się
+                                        </button>
+                                    </form>
+                                </li>
+                            }
+                            else
+                            {
+                                <li class="nav-item">
+                                    <a asp-action="login" asp-controller="account" class="btn btn-danger">Logowanie</a>
+                                </li>
+                            }
+                        </div>
                     </ul>
                 </div>
             </div>

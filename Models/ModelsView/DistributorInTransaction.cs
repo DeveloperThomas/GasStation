@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace GasStation.Models.ModelsView
 {
-    public class DistributorInTransaction:Distributor
+    public class DistributorInTransaction : Distributor
     {
         public string NameOfFuel { get; set; }
         public float PriceForLiter { get; set; }

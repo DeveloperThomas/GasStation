@@ -19,5 +19,6 @@ namespace GasStation.Models
         public int TransactionId { get; set; }
         [Required]
         public float Amount { get; set; }
+        public float Price { get; set; }
     }
 }

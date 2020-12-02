@@ -59,9 +59,8 @@ namespace GasStation.Service
         {
             try
             {
-
-                var product = GetById(discountId);
-                _context.Remove(discountId);
+                var discount = GetById(discountId);
+                _context.Remove(discount);
                 _context.SaveChanges();
 
             }
@@ -72,5 +71,21 @@ namespace GasStation.Service
             }
 
         }
+
+        public Discount GetDiscountForProduct(int productId)
+        {
+            Discount discount = _context.Discounts.Where(d => d.ProductId == productId).FirstOrDefault();
+
+            if (discount == null)
+                return null;
+            else
+            {
+                if (DateTime.UtcNow >= discount.BeginDate && DateTime.UtcNow < discount.FinishDate)
+                    return discount;
+                else
+                    return null;
+            }
+        }
+
     }
 }
