@@ -113,7 +113,6 @@ namespace GasStation.Controllers
 
         public IActionResult Delete(int id)
         {
-
             try
             {
                 _productService.Delete(id);

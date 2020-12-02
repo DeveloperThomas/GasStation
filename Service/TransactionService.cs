@@ -49,6 +49,10 @@ namespace GasStation.Service
         {
             try
             {
+                Invoice invoice = transactionCreate.Transaction.Invoice;
+                if (invoice.NIP == 0 || invoice.InvoiceNumber == 0 || String.IsNullOrEmpty(invoice.RegistrationNumber) == true)
+                    transactionCreate.Transaction.Invoice = null;
+
                 Transaction transaction = transactionCreate.Transaction;
                 transaction.ApplicationUserId = _accountService.GetCurrentUserId();
                 transaction.ProductsLists = new List<ProductsList>();
@@ -61,7 +65,7 @@ namespace GasStation.Service
                 {
                     if(transactionProduct.InTransaction)
                     {
-                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.ProductId, transactionProduct.Amount);
+                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.ProductId, transactionProduct.Amount, transactionProduct.Price);
                         transaction.ProductsLists.Add(productList);
                     }
           
@@ -83,7 +87,7 @@ namespace GasStation.Service
                         Tank tank = _tankService.GetById(distributor.TankId);
                         Product product = _productService.GetById(tank.ProductId);
 
-                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, product.ProductId, distributor.Counter);
+                        var productList = _productsListService.CreateProductsLists(transaction.TransactionId, product.ProductId, distributor.Counter, distributor.PriceForLiter);
                         transaction.ProductsLists.Add(productList);
                     }
 

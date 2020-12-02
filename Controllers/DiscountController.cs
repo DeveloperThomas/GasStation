@@ -17,9 +17,9 @@ namespace GasStation.Controllers
         private readonly AppDbContext _context;
         private readonly DiscountService _discountService;
         private readonly ProductService _productService;
-        public DiscountController(DiscountService discountService, ProductService productService)
+        public DiscountController(AppDbContext context, DiscountService discountService, ProductService productService)
         {
-
+            _context = context;
             _discountService = discountService;
             _productService = productService;
         }
@@ -43,8 +43,8 @@ namespace GasStation.Controllers
             };
             ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
 
-            model.BeginDate = DateTime.Now;
-            model.FinishDate = DateTime.Now;
+            model.BeginDate = DateTime.UtcNow;
+            model.FinishDate = DateTime.UtcNow;
 
             return View(model);
         }
@@ -74,8 +74,6 @@ namespace GasStation.Controllers
 
         public IActionResult Edit(int id)
         {
-
-
             var dicount = _discountService.GetById(id);
             if (dicount == null)
             {
@@ -96,18 +94,15 @@ namespace GasStation.Controllers
                         new SelectListItem { Value = "1", Text = "Procentowa" }
                     }
             };
-   
+
+            ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
+
             return View(model);
         }
 
         [HttpPost]
         public IActionResult Edit(int id, Discount dicount)
         {
-            if (id != dicount.ProductId)
-            {
-                return NotFound();
-            }
-
             if (ModelState.IsValid)
             {
                 try
@@ -123,21 +118,35 @@ namespace GasStation.Controllers
             return View(dicount);
         }
 
-        public async Task<IActionResult> Delete(int? id)
+        public IActionResult Delete(int id)
         {
-            if (id == null)
+            //if (id == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //var discount = await _context.Discounts
+            //    .FirstOrDefaultAsync(m => m.DiscountId == id);
+            //if (discount == null)
+            //{
+            //    return NotFound();
+            //}
+
+            //return View(discount);
+
+            try
             {
-                return NotFound();
+                //_productService.Delete(id);
+                _discountService.Delete(id);
+                TempData["Info"] = "Zniżka została usunięta";
+            }
+            catch (Exception)
+            {
+                TempData["Warning"] = "Wystapił błąd podczas usuwania zniżki.";
+                throw;
             }
 
-            var product = await _context.Products
-                .FirstOrDefaultAsync(m => m.ProductId == id);
-            if (product == null)
-            {
-                return NotFound();
-            }
-
-            return View(product);
+            return RedirectToAction("Index", "Discount");
         }
 
         // POST: Product/Delete/5
@@ -145,8 +154,8 @@ namespace GasStation.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> DeleteConfirmed(int id)
         {
-            var product = await _context.Products.FindAsync(id);
-            _context.Products.Remove(product);
+            var discount = await _context.Discounts.FindAsync(id);
+            _context.Discounts.Remove(discount);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
         }
