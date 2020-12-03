@@ -11,6 +11,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
 
 namespace GasStation
 {
@@ -39,6 +40,12 @@ namespace GasStation
             services.AddScoped<LoyaltyCardService>();
             services.AddScoped<ProductsListService>();
             services.AddHttpContextAccessor();
+            var cultureInfo = new CultureInfo("en-US");
+        
+
+            CultureInfo.DefaultThreadCurrentCulture = cultureInfo;
+            CultureInfo.DefaultThreadCurrentUICulture = cultureInfo;
+
             services.AddIdentity<ApplicationUser, IdentityRole>(options =>
             {
                 options.Password.RequireNonAlphanumeric = false;

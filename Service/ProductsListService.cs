@@ -19,7 +19,7 @@ namespace GasStation.Service
             _context = context;
         }
 
-        public ProductsList CreateProductsLists(int transactionId, int productId, float amount, float price)
+        public ProductsList CreateProductsLists(int transactionId, int productId, float amount, decimal price)
         {
             var productsList = new ProductsList()
             {

@@ -29,38 +29,38 @@ namespace GasStation.Controllers
             return View(users);
         }
 
-        [HttpGet]
-        public IActionResult CreateRole()
-        {
-            return View();
-        }
+        //[HttpGet]
+        //public IActionResult CreateRole()
+        //{
+        //    return View();
+        //}
 
-        [HttpPost]
-        public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
-        {
-            if(ModelState.IsValid)
-            {
-                IdentityRole identityRole = new IdentityRole
-                {
-                    Name = model.RoleName
-                };
+        //[HttpPost]
+        //public async Task<IActionResult> CreateRole(CreateRoleViewModel model)
+        //{
+        //    if(ModelState.IsValid)
+        //    {
+        //        IdentityRole identityRole = new IdentityRole
+        //        {
+        //            Name = model.RoleName
+        //        };
                 
-                IdentityResult result = await roleManager.CreateAsync(identityRole);
+        //        IdentityResult result = await roleManager.CreateAsync(identityRole);
                 
-                if(result.Succeeded)
-                {
-                    TempData["Info"] = "Dodano rolę";
-                    return RedirectToAction("ListRoles", "Administration");
-                }
+        //        if(result.Succeeded)
+        //        {
+        //            TempData["Info"] = "Dodano rolę";
+        //            return RedirectToAction("ListRoles", "Administration");
+        //        }
 
-                foreach(IdentityError error in result.Errors)
-                {
-                    ModelState.AddModelError("", error.Description);
-                }
-            }
+        //        foreach(IdentityError error in result.Errors)
+        //        {
+        //            ModelState.AddModelError("", error.Description);
+        //        }
+        //    }
 
-            return View(model);
-        }
+        //    return View(model);
+        //}
 
         [HttpGet]
         public IActionResult ListRoles()

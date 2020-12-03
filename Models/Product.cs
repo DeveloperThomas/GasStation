@@ -15,7 +15,8 @@ namespace GasStation.Models
         [Required]
         public string Name { get; set; }
         [Required]
-        public float Price { get; set; }
+        [DataType(DataType.Currency)]
+        public decimal Price { get; set; }
         public int? LoyaltyPointsPrice { get; set; }
         [Required]
         public float Stock { get; set; }

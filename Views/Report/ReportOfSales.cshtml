@@ -6,7 +6,7 @@
 
 <link rel="stylesheet" type="text/css" href="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/css/bootstrap-datepicker.min.css">
 <script type="text/javascript" charset="utf8" src="https://cdnjs.cloudflare.com/ajax/libs/bootstrap-datepicker/1.9.0/js/bootstrap-datepicker.min.js"></script>
-
+<link rel="stylesheet" href="https://formden.com/static/cdn/bootstrap-iso.css" />
 <h2 style="text-align:center;">Raport sprzedaży produktów</h2>
 <form asp-action="ReportOfSales" method="post">
     <div class="row">
@@ -43,6 +43,33 @@
     </div>
 </form>
 
+<div class="box box-primary">
+    <div class="box-body">
+      
+            <div class="container">
+                <div class="row" style="margin:20px;">
+                    <div class="col-md-4">
+                        @Html.Label("Dokonane transakcje")
+                        <input asp-for=@Model.NumberOfTransactions class="form-control" value=@Model.NumberOfTransactions readonly/>
+
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Label("Sprzedane produkty")
+                        <input asp-for=@Model.NumberOfSoldProducts class="form-control" value=@Model.NumberOfSoldProducts readonly/>
+                    </div>
+                    <div class="col-md-4">
+                        @Html.Label("Wystawione faktury")
+                        <input asp-for=@Model.NumberOfInvoices class="form-control" value=@Model.NumberOfInvoices readonly />
+                    </div>
+                </div>
+
+
+            </div>
+
+
+
+    </div>
+</div>
 
 <table class="display" id="productTable">
     <thead>
@@ -51,15 +78,13 @@
                 Nazwa
             </th>
             <th>
-                Cena
+                Suma ze sprzedaży produktu
             </th>
             <th>
-                Wartość w punktach
+               Ilość sprzedanego produktu
             </th>
-            <th>
-                Ilość na stanie
-            </th>
-            <th></th>
+
+
         </tr>
     </thead>
     <tbody>
@@ -70,19 +95,12 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.Price)
+                    @String.Format("{0:N}", item.Price)
+  
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.LoyaltyPointsPrice)
-                </td>
+
                 <td>
                     @Html.DisplayFor(modelItem => item.Stock)
-                </td>
-                <td>
-                    <a style="background-color:lightblue;" asp-action="Edit" asp-route-id="@item.ProductId" class="btn btn-default" title="Edycja"><i class="fas fa-pencil-alt"></i></a>
-                    <span><a style="color:white;background-color:red;" onclick="deleteFunction('@item.ProductId')" class="btn btn-default " title="Usuwanie"><i class="fa fa-trash "></i> </a></span>
-
-
                 </td>
             </tr>
         }
@@ -96,7 +114,7 @@
         $('#productTable').DataTable({
             "iDisplayLength": 10,
             "columnDefs": [
-                { "orderable": false, "targets": [0, 2] }
+                { "orderable": true, "targets": [0, 2] }
 
             ],
             "language": {

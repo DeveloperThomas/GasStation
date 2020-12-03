@@ -54,6 +54,13 @@ namespace GasStation.Controllers
         [ValidateAntiForgeryToken]
         public IActionResult Create(DiscountCreate discountAdd)
         {
+            discountAdd.TypeOfDiscount = new List<SelectListItem>
+                    {
+                        new SelectListItem { Value = "0", Text = "Wartościowa" },
+                        new SelectListItem { Value = "1", Text = "Procentowa" },
+
+                    };
+            ViewData["ProductId"] = new SelectList(_productService.GetAllProducts(), "ProductId", "Name");
             if (ModelState.IsValid)
             {
                 Discount modelToAdd = new Discount
@@ -65,6 +72,30 @@ namespace GasStation.Controllers
                     FinishDate = discountAdd.FinishDate,
                     ProductId=discountAdd.ProductId
                 };
+                Product product = _productService.GetById(discountAdd.ProductId);
+                if (modelToAdd.Type==0)//wartosciowa
+                {
+                   
+                    if(product.Price- (decimal)modelToAdd.Value<=0)
+                    {
+                        TempData["Warning"] = "Nie można dodać promocji, cena produktu nie moze być zerowa!!!";
+                        return View(discountAdd);
+                    }
+                    
+                }
+                else if(modelToAdd.Type==1)//procentowa
+                {
+                    if(modelToAdd.Value<=0 || modelToAdd.Value>99)
+                    {
+                        TempData["Warning"] = "Wartosć promocji powinna być pomiędzy 1 a 99";
+                        return View(discountAdd);
+                    }
+                    if(product.Price-(product.Price*((decimal)modelToAdd.Value/100))<=0)
+                    {
+                        TempData["Warning"] = "Nie można dodać promocji, cena produktu nie moze być zerowa!!!";
+                        return View(discountAdd);
+                    }
+                }
                 _discountService.Create(modelToAdd);
                 TempData["Info"] = "Pomocja została dodana";
                 return RedirectToAction(nameof(Index));
