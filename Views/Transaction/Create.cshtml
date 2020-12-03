@@ -8,9 +8,9 @@
 
 <h1 style="text-align:center;">Utwórz nową transakcję</h1>
 
-<form asp-action="Create">
+<form asp-action="Create" method="post">
     <div asp-validation-summary="ModelOnly" class="text-danger"></div>
-    <br/>
+    <br />
     <h3 style="text-align:center;">Dostępne dystrybutory</h3>
 
     <table class="display" id="distributorTable">
@@ -43,35 +43,36 @@
 
             @for (var i = 0; i < Model.DistributorInTransaction.Count; i++)
             {
-            <tr>
-                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].DistributorId />
-                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].TankId />
-                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Counter />
-                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].PriceForLiter />
-                <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Sum />
-                <td>
-                    @Model.DistributorInTransaction[i].DistributorId
-                </td>
-                <td>
-                    @Model.DistributorInTransaction[i].NameOfFuel
-                </td>
-                <td>
-                    @Model.DistributorInTransaction[i].Counter
-                </td>
-                <td>
-                    @Model.DistributorInTransaction[i].PriceForLiter
-                </td>
-                <td>
-                    @Model.DistributorInTransaction[i].Sum
-                    <input id="sumDistributor_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].Sum hidden />
-                </td>
-                <td>
-                    @Model.DistributorInTransaction[i].IsLocked
-                </td>
-                <td class="text-center">
-                    <input id="isCheck_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].InTransaction onchange="distributorValue(@i)"/>
-                </td>
-            </tr>
+                <tr>
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].DistributorId />
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].TankId />
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Counter />
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].PriceForLiter />
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].Sum />
+                    <input type="hidden" asp-for=@Model.DistributorInTransaction[i].NameOfFuel />
+                    <td>
+                        @Model.DistributorInTransaction[i].DistributorId
+                    </td>
+                    <td>
+                        @Model.DistributorInTransaction[i].NameOfFuel
+                    </td>
+                    <td>
+                        @Model.DistributorInTransaction[i].Counter
+                    </td>
+                    <td>
+                        @Model.DistributorInTransaction[i].PriceForLiter
+                    </td>
+                    <td>
+                        @Model.DistributorInTransaction[i].Sum
+                        <input id="sumDistributor_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].Sum hidden />
+                    </td>
+                    <td>
+                        @Model.DistributorInTransaction[i].IsLocked
+                    </td>
+                    <td class="text-center">
+                        <input id="isCheck_@i.ToString()" asp-for=@Model.DistributorInTransaction[i].InTransaction onchange="distributorValue(@i)" />
+                    </td>
+                </tr>
             }
         </tbody>
     </table>
@@ -106,32 +107,37 @@
                     <input type="hidden" asp-for=@Model.TransactionProduct[i].ProductId />
                     <td>
                         @Model.TransactionProduct[i].Name
+                        <input type="hidden" asp-for=@Model.TransactionProduct[i].Name />
+                        <input type="hidden" asp-for=@Model.TransactionProduct[i].MaxAmountOfProduct />
+               
                     </td>
                     <td>
-                        <input id="amountProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Amount onchange="sumProducts(@i)"/>
+
+
+                        <input style="width:200px;" id="amountProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Amount onchange="sumProducts(@i)" placeholder="Maksimum:@Model.TransactionProduct[i].MaxAmountOfProduct" min="0" max=@Model.TransactionProduct[i].MaxAmountOfProduct />
                     </td>
                     <td>
-                       @Model.TransactionProduct[i].Price
+                        @Model.TransactionProduct[i].Price
                     </td>
                     <td>
                         <input id="sumproduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].Price hidden />
-                     <span id="sumproductFinal_@i.ToString()" asp-for=@Model.TransactionProduct[i].SumMoneyForProduct value=@Model.TransactionProduct[i].SumMoneyForProduct ></span>
+                        <span id="sumproductFinal_@i.ToString()" asp-for=@Model.TransactionProduct[i].SumMoneyForProduct value=@Model.TransactionProduct[i].SumMoneyForProduct></span>
                     </td>
                     <td class="text-center">
-                        <input id="isCheckProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)"/>
+                        <input id="isCheckProduct_@i.ToString()" asp-for=@Model.TransactionProduct[i].InTransaction onchange="sumValueOfFromProduct(@i)" />
                     </td>
                 </tr>
             }
         </tbody>
     </table>
-    <br/>
-    <br/>
-    <br/>
+    <br />
+    <br />
+    <br />
     <div class="row">
         <div class="col-md-4">
             <div class="form-group">
                 <label asp-for="Transaction.PaymentType" class="control-label">Rodzaj płatności</label>
-                <select asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment" id="paymentType" onchange="changePaymentType()" class="form-control" ></select>
+                <select asp-for="Transaction.PaymentType" asp-items="Model.TypesOfPayment" id="paymentType" onchange="changePaymentType()" class="form-control"></select>
                 <span asp-validation-for="Transaction.PaymentType" class="text-danger"></span>
             </div>
         </div>
@@ -144,14 +150,16 @@
         <div class="col-md-4">
             <div class="form-group align-middle">
                 <label>Suma końcowa</label>
-                <input id="sumValue" readonly/>
+                <input id="sumValue" readonly />
+                <input id="sumValueConstant" hidden />
             </div>
         </div>
     </div>
-    <input type="button" onclick="myFunction()" value="Faktura" checked="" class="btn btn-primary"/>
-    <input type="button" onclick="selectLoyaltyCard()" value="Karta lojalnościowa" checked="" class="btn btn-primary"/>
-    <br/>
-    <br/>
+    <input type="button" onclick="myFunction()" value="Faktura" checked="" class="btn btn-primary" />
+    <input type="button" onclick="selectLoyaltyCard()" value="Karta lojalnościowa" checked="" class="btn btn-primary" />
+
+    <br />
+    <br />
     <div id="myDIV">
         <div class="row">
             <div class="col-md-4">
@@ -169,7 +177,7 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="Transaction.Invoice.InvoiceNumber" class="control-label">Nr faktury</label>
-                    <input asp-for="Transaction.Invoice.InvoiceNumber" class="form-control" />
+                    <input asp-for="Transaction.Invoice.InvoiceNumber" class="form-control" readonly/>
                 </div>
             </div>
         </div>
@@ -179,17 +187,33 @@
             <div class="col-md-4">
                 <div class="form-group">
                     <label asp-for="Transaction.LoyaltyCardId" class="control-label">Nr karty</label>
-                    <select id="loyaltyCardSelect" asp-for="Transaction.LoyaltyCardId" class="form-control" asp-items="ViewBag.LoyaltyCardId"></select>
+                    <select id="loyaltyCardSelect" asp-for="Transaction.LoyaltyCardId" class="form-control" asp-items="ViewBag.LoyaltyCardId" onchange="payByLoyaltyCard()"></select>
                 </div>
             </div>
-        </div>
+            <div class="col-md-4" id="paymentUsingLoyaltyCard">
+                <div class="form-group" id="usingLoyaltyCard">
+                  
+                    <input type="button" onclick="sumLoyaltyCard()" value="Płace punktami" checked="" class="btn btn-danger" />
+
+                </div>
+            </div>
+            <div class="col-md-4" >
+                <div class="form-group" id="sumOfPointsLoyaltyCard">
+
+                    <label asp-for="@Model.SumOfLoyaltyCardPoints" class="control-label">Ilość punktów</label>
+                    <input asp-for="@Model.SumOfLoyaltyCardPoints" class="form-control" onchange="changeValueOfTotalSumUsingLoyaltyPoints()" id="amountOfPointLoyalty"/>
+
+                </div>
+
+            </div>
     </div>
-    <br/>
-    <br/>
-    <br/>
-        <div class="form-group">
-            <input type="submit" value="Dodaj" class="btn btn-primary" />
-        </div>
+</div>
+    <br />
+    <br />
+    <br />
+    <div class="form-group">
+        <input type="submit" value="Dodaj" class="btn btn-primary" />
+    </div>
 </form>
 
 
@@ -203,6 +227,24 @@
 }
 
 <script type="text/javascript">
+
+
+    function changeValueOfTotalSumUsingLoyaltyPoints() {
+        var sumValue = $('#sumValueConstant').val();
+        var loyaltyPointAmount = $("#amountOfPointLoyalty").val();
+        console.log(sumValue);
+        console.log(loyaltyPointAmount);
+        var pom = 0.01;
+        var loyaltyValueInMoney = parseFloat(loyaltyPointAmount) * parseFloat(pom);
+        console.log(loyaltyValueInMoney);
+        sumValue = parseFloat(sumValue) - parseFloat(loyaltyValueInMoney);
+        console.log(sumValue);
+        $("#sumValue").val(sumValue);
+    }
+
+
+
+
     function myFunction() {
         var x = document.getElementById("myDIV");
         if (x.style.display === "none") {
@@ -214,8 +256,29 @@
 
     function selectLoyaltyCard() {
         var loyaltyCard = document.getElementById("loyaltyCard");
+
+    
         loyaltyCard.style.display = loyaltyCard.style.display == "none" ? "block" : "none";
+     
     }
+
+    function payByLoyaltyCard() {
+        var selectedPaymentType = document.getElementById("loyaltyCardSelect");
+        var selectedPaymentTypeValue = selectedPaymentType.value;
+        var paymentConfirmationRequested = document.getElementById("usingLoyaltyCard");
+
+        paymentConfirmationRequested.style.visibility = selectedPaymentTypeValue == "0" ? "hidden" : "visible";
+    }
+
+    function sumLoyaltyCard() {
+        var x = document.getElementById("sumOfPointsLoyaltyCard");
+        if (x.style.visibility === "hidden") {
+            x.style.visibility = "visible";
+        } else {
+            x.style.visibility = "hidden";
+        }
+    }
+
 
     function changePaymentType() {
         var selectedPaymentType = document.getElementById("paymentType");
@@ -230,11 +293,23 @@
         x.style.display = "none";
         var paymentConfirmationRequested = document.getElementById("paymentConfirmationRequested");
         paymentConfirmationRequested.style.visibility = "hidden";
+
+        var loyaltyCardSumValue = document.getElementById("paymentUsingLoyaltyCard");
+        loyaltyCardSumValue.style.visibility = "hidden";
+
+        var usingLoyaltyCard = document.getElementById("usingLoyaltyCard");
+        usingLoyaltyCard.style.visibility = "hidden";
+        
+
+
+        var sumLoyaltypoint = document.getElementById("sumOfPointsLoyaltyCard");
+        sumLoyaltypoint.style.visibility = "hidden";
+
         var loyaltyCard = document.getElementById("loyaltyCard");
         loyaltyCard.style.display = "none";
         document.getElementById("paymentType").value;
 
-        $("#loyaltyCardSelect").prepend("<option value='' selected='selected'>Nie wybieraj</option>");
+        $("#loyaltyCardSelect").prepend("<option value=0 selected='selected'>Nie wybieraj</option>");
 
         $('#productTransactionTable').DataTable({
             "iDisplayLength": 10,
@@ -294,6 +369,7 @@
                 var finalSum = parseFloat(valueProduct) + parseFloat(sumValue);
                 console.log("eee"+amountProduct_);
                 $("#sumValue").val(finalSum);
+                $("#sumValueConstant").val(finalSum);
             }
 
 
@@ -305,6 +381,7 @@
                 var finalSum = parseFloat(sumValue) - parseFloat(valueProduct);
 
                 $("#sumValue").val(finalSum);
+                $("#sumValueConstant").val(finalSum);
             }
 
         }
@@ -337,3 +414,43 @@
       
     }
 </script>
+<style>
+    .tooltip {
+        position: relative;
+        display: inline-block;
+        border-bottom: 1px dotted black;
+    }
+
+        .tooltip .tooltiptext {
+            visibility: hidden;
+            width: 120px;
+            background-color: #555;
+            color: #fff;
+            text-align: center;
+            border-radius: 6px;
+            padding: 5px 0;
+            position: absolute;
+            z-index: 1;
+            bottom: 125%;
+            left: 50%;
+            margin-left: -60px;
+            opacity: 0;
+            transition: opacity 0.3s;
+        }
+
+            .tooltip .tooltiptext::after {
+                content: "";
+                position: absolute;
+                top: 100%;
+                left: 50%;
+                margin-left: -5px;
+                border-width: 5px;
+                border-style: solid;
+                border-color: #555 transparent transparent transparent;
+            }
+
+        .tooltip:hover .tooltiptext {
+            visibility: visible;
+            opacity: 1;
+        }
+</style>

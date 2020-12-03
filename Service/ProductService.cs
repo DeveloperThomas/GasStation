@@ -39,7 +39,7 @@ namespace GasStation.Service
                             product.Price -= discount.Value;
                             break;
                         case 1:
-                            product.Price *= (float)Math.Round(1.0 - (discount.Value / 100), 2);
+                            product.Price *= Math.Round((decimal)1.0 - (discount.Value / 100), 2);
                             break;
                         default:
                             break;
@@ -90,6 +90,23 @@ namespace GasStation.Service
             catch (Exception ex)
             {
                 throw new Exception( ex.ToString());
+            }
+
+        }
+        public void Edit(int productId, float amount)
+        {
+            try
+            {
+                Product product = GetById(productId);
+                product.Stock = product.Stock - amount;
+
+                _context.Update(product);
+                _context.SaveChanges();
+
+            }
+            catch (Exception ex)
+            {
+                throw new Exception(ex.ToString());
             }
 
         }

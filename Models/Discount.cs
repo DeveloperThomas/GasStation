@@ -20,7 +20,7 @@ namespace GasStation.Models
         [Required]
         public int Type { get; set; }
         [Required]
-        public float Value { get; set; }
+        public decimal Value { get; set; }
 
         [DataType(DataType.Date)]
         public DateTime BeginDate { get; set; }

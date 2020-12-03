@@ -14,5 +14,9 @@ namespace GasStation.Models
         [DataType(DataType.Date)]
         public DateTime DateTo { get; set; }
         public List<Product> Products { get; set; }
+        public int NumberOfSoldProducts { get; set; }
+        public int NumberOfTransactions { get; set; }
+        public int NumberOfInvoices { get; set; }
+
     }
 }

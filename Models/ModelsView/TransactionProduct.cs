@@ -11,6 +11,7 @@ namespace GasStation.Models.ModelsView
         public bool InTransaction { get; set; }
         public float SumMoneyForProduct { get; set; }
         public bool IsDiscountIncluded { get; set; }
-
+        public float MaxAmountOfProduct { get; set; }
+        public string NameOfPayment { get; set; }
     }
 }

@@ -69,13 +69,30 @@ namespace GasStation.Controllers
         public IActionResult Details(int id)
         {
             var transaction = _transactionService.GetById(id);
-
+            
             if (transaction == null)
                 return NotFound();
 
-            transaction.ProductsLists = _productsListService.GetProductsListsByTransactionId(id);
 
-            return View(transaction);
+            var modelDetail = new TransactionView
+            {
+                TransactionId = transaction.TransactionId,
+                ApplicationUser = transaction.ApplicationUser,
+                ApplicationUserId = transaction.ApplicationUserId,
+                LoyaltyCard = transaction.LoyaltyCard,
+                Date = transaction.Date,
+                PaymentConfirmationRequested = transaction.PaymentConfirmationRequested,
+
+            };
+
+            if (transaction.PaymentType == 0)
+                modelDetail.NameOfPayment = "Gotówka";
+            else
+                modelDetail.NameOfPayment = "Karta";
+
+            modelDetail.ProductsLists = _productsListService.GetProductsListsByTransactionId(id);
+
+            return View(modelDetail);
         }
 
         // GET: Transaction/Create
@@ -91,7 +108,11 @@ namespace GasStation.Controllers
             };
 
             transactionCreate.TransactionProduct = new List<TransactionProduct>();
-     
+            Invoice last = _transactionService.LastInvoice();
+            transactionCreate.Transaction = new Transaction();
+            transactionCreate.Transaction.Invoice = new Invoice();
+
+            transactionCreate.Transaction.Invoice.InvoiceNumber = last.InvoiceNumber + 1;
         
             foreach (var product in _productService.GetAllProductsWithoutFuel().ToList())
             {
@@ -101,8 +122,8 @@ namespace GasStation.Controllers
                     Name = product.Name,
                     Price = product.Price,
                     LoyaltyPointsPrice = product.LoyaltyPointsPrice,
-                    Amount = 0,
-                    IsDiscountIncluded = false
+                    IsDiscountIncluded = false,
+                    MaxAmountOfProduct= product.Stock
                 };
 
                 Discount discount = _discountService.GetDiscountForProduct(model.ProductId);
@@ -142,13 +163,29 @@ namespace GasStation.Controllers
                 Random r = new Random();
                 int randomTankId =  r.Next(listOfTanksIds[0], listOfTanksIds[^1]);
                 Tank tank = _tankService.GetById(randomTankId);
+
+                bool isCorrect = false;
+
+                float pom = 0;
+
                 model.NameOfFuel = tank.Product.Name;
                 model.PriceForLiter = tank.Product.Price;
                 model.DistributorId = distributor.DistributorId;
                 model.TankId = tank.TankId;
-                r = new Random();
-                model.Counter = r.Next(0, 50);
-                model.Sum = model.Counter * model.PriceForLiter;
+                while(isCorrect==false)
+                {
+                     r = new Random();
+                     pom = r.Next(0, 50);
+                    if(tank.Stock>=pom)
+                    {
+                        model.Counter = pom;
+                        isCorrect = true;
+                    }
+                }
+              
+
+               
+                model.Sum = model.Counter * (float)model.PriceForLiter;
                 transactionCreate.DistributorInTransaction.Add(model);
             }
 
@@ -165,12 +202,44 @@ namespace GasStation.Controllers
         //public IActionResult Create([Bind("TransactionId,ApplicationUserId,LoyaltyCardId,Date,PaymentType,PaymentConfirmationRequested")] Transaction transaction)
         public IActionResult Create(TransactionCreate transactionCreate)
         {
-        
-                _transactionService.Create(transactionCreate);
-                return RedirectToAction(nameof(Index));
-            
+            try
+            {
 
-           // return View(transactionCreate);
+                if (transactionCreate.Transaction.LoyaltyCardId == 0) transactionCreate.Transaction.LoyaltyCardId = null;
+
+                if (transactionCreate.Transaction.LoyaltyCardId != null && transactionCreate.Transaction.LoyaltyCardId != 0)
+                {
+                    LoyaltyCard loyaltyCard = _loyaltyCardService.GetById((int)transactionCreate.Transaction.LoyaltyCardId);
+                    if(loyaltyCard.Points< transactionCreate.SumOfLoyaltyCardPoints)
+                    {
+        
+                        TempData["Warning"] = "Klient posiada "+ loyaltyCard.Points +"punktów.";
+
+                        transactionCreate.TypesOfPayment = new List<SelectListItem>
+                        {
+                            new SelectListItem { Value = "0", Text = "Gotówka" },
+                            new SelectListItem { Value = "1", Text = "Karta" }
+                        };
+
+                        ViewData["LoyaltyCardId"] = new SelectList(_loyaltyCardService.GetAllLoyaltyCards(), "LoyaltyCardId", "LoyaltyCardId");
+
+
+
+                        return View(transactionCreate);
+                    }
+                }
+               
+
+
+                _transactionService.Create(transactionCreate);
+                TempData["Info"] = "Transakcja została dodana.";
+                return RedirectToAction(nameof(Index));
+            }
+            catch (Exception)
+            {
+                TempData["Warning"] = "Wystąpił błąd podczas dodawania transakcji.";
+                throw;
+            }
         }
 
         // GET: Transaction/Edit/5

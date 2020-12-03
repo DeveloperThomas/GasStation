@@ -20,9 +20,10 @@ namespace GasStation.Service
         private readonly FuelingService _fuelingService;
         private readonly ProductService _productService;
         private readonly TankService  _tankService;
+        private readonly LoyaltyCardService  _loyaltyCardService;
 
         public TransactionService(AppDbContext context, AccountService accountService, ProductsListService productsListService,
-            FuelingService fuelingService, ProductService productService, TankService tankService)
+            FuelingService fuelingService, ProductService productService, TankService tankService, LoyaltyCardService loyaltyCardService)
         {
             _context = context;
             _accountService = accountService;
@@ -30,6 +31,7 @@ namespace GasStation.Service
             _fuelingService = fuelingService;
             _productService = productService;
             _tankService = tankService;
+            _loyaltyCardService = loyaltyCardService;
         }
 
         public Transaction GetById(int id)
@@ -39,8 +41,15 @@ namespace GasStation.Service
                 .Include(t => t.LoyaltyCard)
                 .FirstOrDefault(m => m.TransactionId == id);
         }
-
-        public IEnumerable<Transaction> GetAllTransactions()
+        public List<Transaction> GetTransactionsBetweenDates(DateTime dateFrom, DateTime dataTo)
+        {
+            return _context.Transactions.Where(x => x.Date >= dateFrom && x.Date <= dataTo).Include(x=>x.ProductsLists).Include(y=>y.Invoice).ToList();
+        }
+        public Invoice LastInvoice()
+        {
+            return _context.Invoices.ToList().Last();
+        }
+            public IEnumerable<Transaction> GetAllTransactions()
         {
             return _context.Transactions.Include(t => t.ApplicationUser).Include(t => t.LoyaltyCard);
         }
@@ -49,6 +58,15 @@ namespace GasStation.Service
         {
             try
             {
+                if (transactionCreate.SumOfLoyaltyCardPoints > 0 && transactionCreate.Transaction.LoyaltyCardId != null &&
+                  transactionCreate.Transaction.LoyaltyCardId != 0)
+                {
+                    LoyaltyCard loyaltyCard = _loyaltyCardService.GetById((int)transactionCreate.Transaction.LoyaltyCardId);
+
+                    loyaltyCard.Points -= transactionCreate.SumOfLoyaltyCardPoints;
+                    _loyaltyCardService.Edit(loyaltyCard);
+                }
+
                 Invoice invoice = transactionCreate.Transaction.Invoice;
                 if (invoice.NIP == 0 || invoice.InvoiceNumber == 0 || String.IsNullOrEmpty(invoice.RegistrationNumber) == true)
                     transactionCreate.Transaction.Invoice = null;
@@ -57,16 +75,31 @@ namespace GasStation.Service
                 transaction.ApplicationUserId = _accountService.GetCurrentUserId();
                 transaction.ProductsLists = new List<ProductsList>();
                 transaction.Date = DateTime.Now;
+
                 _context.Add(transaction);
                 _context.SaveChanges();
 
 
                 foreach (var transactionProduct in transactionCreate.TransactionProduct)
                 {
+
                     if(transactionProduct.InTransaction)
                     {
                         var productList = _productsListService.CreateProductsLists(transaction.TransactionId, transactionProduct.ProductId, transactionProduct.Amount, transactionProduct.Price);
                         transaction.ProductsLists.Add(productList);
+          
+
+                        _productService.Edit(transactionProduct.ProductId, transactionProduct.Amount);
+
+                        if(transaction.LoyaltyCardId!=null && transaction.LoyaltyCardId!=0)
+                        {
+                            Product product = _productService.GetById(transactionProduct.ProductId);
+                            LoyaltyCard loyaltyCard = _loyaltyCardService.GetById((int)transaction.LoyaltyCardId);
+                            var sumpoints = transactionProduct.Amount * product.LoyaltyPointsPrice;
+                            loyaltyCard.Points = (int)Math.Round((decimal)sumpoints);
+                            _loyaltyCardService.Edit(loyaltyCard);
+                        }
+
                     }
           
                 }
@@ -85,15 +118,30 @@ namespace GasStation.Service
                         _fuelingService.Create(fueling);
 
                         Tank tank = _tankService.GetById(distributor.TankId);
+                        tank.Stock = tank.Stock - distributor.Counter;
+                        _tankService.Edit(tank);
                         Product product = _productService.GetById(tank.ProductId);
 
                         var productList = _productsListService.CreateProductsLists(transaction.TransactionId, product.ProductId, distributor.Counter, distributor.PriceForLiter);
                         transaction.ProductsLists.Add(productList);
+                        _productService.Edit(product.ProductId, distributor.Counter);
+
+                        if (transaction.LoyaltyCardId != null && transaction.LoyaltyCardId != 0)
+                        {
+                           
+                            LoyaltyCard loyaltyCard = _loyaltyCardService.GetById((int)transaction.LoyaltyCardId);
+                            var sumpoints = distributor.Counter * product.LoyaltyPointsPrice;
+                            loyaltyCard.Points = (int)Math.Round((decimal)sumpoints);
+                            _loyaltyCardService.Edit(loyaltyCard);
+                        }
+
+
                     }
 
 
                 }
 
+           
                 _context.SaveChanges();
             }
             catch (Exception ex)
